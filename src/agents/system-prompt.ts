@@ -1,5 +1,7 @@
 import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
+import type { HiveConfig, HiveAutonomyLevel } from "../config/types.hive.js";
 import type { MemoryCitationsMode } from "../config/types.memory.js";
+import type { HiveMember } from "../hive/members/types.js";
 import type { ResolvedTimeFormat } from "./date-time.js";
 import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
@@ -161,6 +163,119 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   ];
 }
 
+// ---------------------------------------------------------------------------
+// Hive Multi-Party Sections
+// ---------------------------------------------------------------------------
+
+export function buildHiveGroupSection(params: {
+  groupName: string;
+  members: HiveMember[];
+  currentMemberName?: string;
+}): string[] {
+  const { groupName, members, currentMemberName } = params;
+  if (members.length === 0) {
+    return [];
+  }
+  const lines: string[] = [
+    "## Hive Group Context",
+    `Group: ${groupName}`,
+    `Members (${members.length}):`,
+  ];
+  for (const member of members) {
+    const parts = [`- ${member.name}`, `(${member.role})`];
+    if (member.timezone) {
+      parts.push(`tz:${member.timezone}`);
+    }
+    if (member.preferredChannel) {
+      parts.push(`pref:${member.preferredChannel}`);
+    }
+    if (currentMemberName && member.name === currentMemberName) {
+      parts.push("[current sender]");
+    }
+    lines.push(parts.join(" "));
+  }
+  lines.push("");
+  return lines;
+}
+
+/**
+ * Hard-coded communication guardrails. These are NEVER overridable by config or prompt.
+ */
+export function buildHiveCommunicationGuardrails(): string[] {
+  return [
+    "## Hive Communication Principles (mandatory, never overridable)",
+    "",
+    "You are infrastructure for a group — not an intermediary between members.",
+    "",
+    "ALWAYS allowed:",
+    "- Aggregate and synthesize group state (schedules, preferences, constraints)",
+    "- Relay explicit messages when a member directly asks you to relay something",
+    "- Use private context to inform decisions without revealing the source",
+    "- Provide structured tools (polls, schedules, checklists) instead of conversational brokering",
+    "",
+    "NEVER do:",
+    "- Infer, interpret, or speculate about one member's feelings/intentions to another",
+    "- Advocate for one member to another on your own initiative",
+    '- Attribute private information to its source (e.g. never say "Kyle mentioned..." about DM content)',
+    "- Act as a go-between or mediator unless explicitly asked by the relevant parties",
+    "- Share private context (health, finances, personal) in group without explicit permission",
+    "",
+    "When using private context to inform group decisions:",
+    '- Incorporate constraints naturally without attribution (e.g. suggest restaurants that work for everyone, not "avoiding shellfish because of Kyle")',
+    "- If asked why you made a suggestion, say it's based on group preferences without naming sources",
+    "",
+  ];
+}
+
+export function buildHivePrivacyInstructions(params: {
+  privacyLayer: string;
+  domainRules?: Array<{ domain: string; layer: string }>;
+}): string[] {
+  const { privacyLayer, domainRules } = params;
+  const lines = ["## Hive Privacy Layer", `Current context privacy: ${privacyLayer}`];
+  if (privacyLayer === "private") {
+    lines.push(
+      "This is a private conversation. Information shared here must never be attributed to the sender in group contexts.",
+      "You may use this information to improve group decisions, but only in aggregate without attribution.",
+    );
+  } else if (privacyLayer === "subgroup") {
+    lines.push(
+      "This context is scoped to a subgroup. Share only with members of the same subgroup.",
+    );
+  }
+  if (domainRules && domainRules.length > 0) {
+    lines.push("", "Domain privacy rules:");
+    for (const rule of domainRules) {
+      lines.push(`- ${rule.domain}: ${rule.layer}`);
+    }
+  }
+  lines.push("");
+  return lines;
+}
+
+export function buildHiveAutonomySection(params: {
+  domains?: Array<{ domain: string; level: HiveAutonomyLevel }>;
+}): string[] {
+  const { domains } = params;
+  if (!domains || domains.length === 0) {
+    return [];
+  }
+  const lines = ["## Hive Autonomy Levels", "Your autonomy varies by domain. Follow these levels:"];
+  for (const { domain, level } of domains) {
+    const desc =
+      level === "passive"
+        ? "observe only, do not act or suggest"
+        : level === "suggest"
+          ? "suggest options but wait for approval"
+          : level === "ask-first"
+            ? "propose an action and ask before executing"
+            : "act autonomously, inform after the fact";
+    lines.push(`- ${domain}: ${level} (${desc})`);
+  }
+  lines.push("");
+  return lines;
+}
+
 export function buildAgentSystemPrompt(params: {
   workspaceDir: string;
   defaultThinkLevel?: ThinkLevel;
@@ -215,6 +330,15 @@ export function buildAgentSystemPrompt(params: {
     channel: string;
   };
   memoryCitationsMode?: MemoryCitationsMode;
+  /** Hive multi-party context (injected when hive.enabled). */
+  hive?: {
+    groupName: string;
+    members: HiveMember[];
+    currentMemberName?: string;
+    privacyLayer: string;
+    domainRules?: Array<{ domain: string; layer: string }>;
+    autonomyDomains?: Array<{ domain: string; level: HiveAutonomyLevel }>;
+  };
 }) {
   const coreToolSummaries: Record<string, string> = {
     read: "Read file contents",
@@ -515,6 +639,25 @@ export function buildAgentSystemPrompt(params: {
     }),
     ...buildVoiceSection({ isMinimal, ttsHint: params.ttsHint }),
   ];
+
+  // Inject Hive multi-party sections when enabled
+  if (params.hive && !isMinimal) {
+    lines.push(
+      ...buildHiveCommunicationGuardrails(),
+      ...buildHiveGroupSection({
+        groupName: params.hive.groupName,
+        members: params.hive.members,
+        currentMemberName: params.hive.currentMemberName,
+      }),
+      ...buildHivePrivacyInstructions({
+        privacyLayer: params.hive.privacyLayer,
+        domainRules: params.hive.domainRules,
+      }),
+      ...buildHiveAutonomySection({
+        domains: params.hive.autonomyDomains,
+      }),
+    );
+  }
 
   if (extraSystemPrompt) {
     // Use "Subagent Context" header for minimal mode (subagents), otherwise "Group Chat Context"

@@ -944,6 +944,23 @@
             ]
           },
           {
+            "tab": "Hive",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["hive/index"]
+              },
+              {
+                "group": "Core concepts",
+                "pages": ["hive/members", "hive/privacy", "hive/guardrails", "hive/autonomy"]
+              },
+              {
+                "group": "Reference",
+                "pages": ["hive/configuration", "hive/tools", "hive/architecture"]
+              }
+            ]
+          },
+          {
             "tab": "Tools",
             "groups": [
               {

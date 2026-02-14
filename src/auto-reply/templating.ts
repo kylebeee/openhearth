@@ -141,6 +141,19 @@ export type MsgContext = {
    * Used for hook confirmation messages like "Session context saved to memory".
    */
   HookMessages?: string[];
+
+  // -- Hive multi-party fields --
+
+  /** Resolved Hive member id for the sender. */
+  HiveMemberId?: string;
+  /** Resolved Hive member display name. */
+  HiveMemberName?: string;
+  /** Resolved Hive member role (owner | admin | member | guest). */
+  HiveMemberRole?: string;
+  /** Hive group key for the current session. */
+  HiveGroupId?: string;
+  /** Privacy layer for the current message context (public | subgroup | private | agent-inferred). */
+  HivePrivacyLayer?: string;
 };
 
 export type FinalizedMsgContext = Omit<MsgContext, "CommandAuthorized"> & {
