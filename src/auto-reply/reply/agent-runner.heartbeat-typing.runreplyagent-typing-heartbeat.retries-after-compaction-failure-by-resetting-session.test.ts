@@ -14,9 +14,9 @@ describe("runReplyAgent typing (heartbeat)", () => {
   installRunReplyAgentTypingHeartbeatTestHooks();
 
   it("retries after compaction failure by resetting the session", async () => {
-    const prevStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-session-compaction-reset-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const prevStateDir = process.env.OPENHEARTH_STATE_DIR;
+    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openhearth-session-compaction-reset-"));
+    process.env.OPENHEARTH_STATE_DIR = stateDir;
     try {
       const sessionId = "session";
       const storePath = path.join(stateDir, "sessions", "sessions.json");
@@ -55,17 +55,17 @@ describe("runReplyAgent typing (heartbeat)", () => {
       expect(persisted.main.sessionId).toBe(sessionStore.main.sessionId);
     } finally {
       if (prevStateDir) {
-        process.env.OPENCLAW_STATE_DIR = prevStateDir;
+        process.env.OPENHEARTH_STATE_DIR = prevStateDir;
       } else {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.OPENHEARTH_STATE_DIR;
       }
     }
   });
 
   it("retries after context overflow payload by resetting the session", async () => {
-    const prevStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-session-overflow-reset-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const prevStateDir = process.env.OPENHEARTH_STATE_DIR;
+    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openhearth-session-overflow-reset-"));
+    process.env.OPENHEARTH_STATE_DIR = stateDir;
     try {
       const sessionId = "session";
       const storePath = path.join(stateDir, "sessions", "sessions.json");
@@ -109,17 +109,17 @@ describe("runReplyAgent typing (heartbeat)", () => {
       expect(persisted.main.sessionId).toBe(sessionStore.main.sessionId);
     } finally {
       if (prevStateDir) {
-        process.env.OPENCLAW_STATE_DIR = prevStateDir;
+        process.env.OPENHEARTH_STATE_DIR = prevStateDir;
       } else {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.OPENHEARTH_STATE_DIR;
       }
     }
   });
 
   it("resets the session after role ordering payloads", async () => {
-    const prevStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-session-role-ordering-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const prevStateDir = process.env.OPENHEARTH_STATE_DIR;
+    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openhearth-session-role-ordering-"));
+    process.env.OPENHEARTH_STATE_DIR = stateDir;
     try {
       const sessionId = "session";
       const storePath = path.join(stateDir, "sessions", "sessions.json");
@@ -163,9 +163,9 @@ describe("runReplyAgent typing (heartbeat)", () => {
       expect(persisted.main.sessionId).toBe(sessionStore.main.sessionId);
     } finally {
       if (prevStateDir) {
-        process.env.OPENCLAW_STATE_DIR = prevStateDir;
+        process.env.OPENHEARTH_STATE_DIR = prevStateDir;
       } else {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.OPENHEARTH_STATE_DIR;
       }
     }
   });

@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `openclaw browser` (profiles, tabs, actions, extension relay)"
+summary: "CLI reference for `openhearth browser` (profiles, tabs, actions, extension relay)"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
+  - You use `openhearth browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to use the Chrome extension relay (attach/detach via toolbar button)
 title: "browser"
 ---
 
-# `openclaw browser`
+# `openhearth browser`
 
-Manage OpenClaw’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
+Manage OpenHearth’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
 
 Related:
 
@@ -27,38 +27,38 @@ Related:
 ## Quick start (local)
 
 ```bash
-openclaw browser --browser-profile chrome tabs
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw open https://example.com
-openclaw browser --browser-profile openclaw snapshot
+openhearth browser --browser-profile chrome tabs
+openhearth browser --browser-profile openhearth start
+openhearth browser --browser-profile openhearth open https://example.com
+openhearth browser --browser-profile openhearth snapshot
 ```
 
 ## Profiles
 
 Profiles are named browser routing configs. In practice:
 
-- `openclaw`: launches/attaches to a dedicated OpenClaw-managed Chrome instance (isolated user data dir).
+- `openhearth`: launches/attaches to a dedicated OpenHearth-managed Chrome instance (isolated user data dir).
 - `chrome`: controls your existing Chrome tab(s) via the Chrome extension relay.
 
 ```bash
-openclaw browser profiles
-openclaw browser create-profile --name work --color "#FF5A36"
-openclaw browser delete-profile --name work
+openhearth browser profiles
+openhearth browser create-profile --name work --color "#FF5A36"
+openhearth browser delete-profile --name work
 ```
 
 Use a specific profile:
 
 ```bash
-openclaw browser --browser-profile work tabs
+openhearth browser --browser-profile work tabs
 ```
 
 ## Tabs
 
 ```bash
-openclaw browser tabs
-openclaw browser open https://docs.openclaw.ai
-openclaw browser focus <targetId>
-openclaw browser close <targetId>
+openhearth browser tabs
+openhearth browser open https://docs.openhearth.ai
+openhearth browser focus <targetId>
+openhearth browser close <targetId>
 ```
 
 ## Snapshot / screenshot / actions
@@ -66,21 +66,21 @@ openclaw browser close <targetId>
 Snapshot:
 
 ```bash
-openclaw browser snapshot
+openhearth browser snapshot
 ```
 
 Screenshot:
 
 ```bash
-openclaw browser screenshot
+openhearth browser screenshot
 ```
 
 Navigate/click/type (ref-based UI automation):
 
 ```bash
-openclaw browser navigate https://example.com
-openclaw browser click <ref>
-openclaw browser type <ref> "hello"
+openhearth browser navigate https://example.com
+openhearth browser click <ref>
+openhearth browser type <ref> "hello"
 ```
 
 ## Chrome extension relay (attach via toolbar button)
@@ -90,8 +90,8 @@ This mode lets the agent control an existing Chrome tab that you attach manually
 Install the unpacked extension to a stable path:
 
 ```bash
-openclaw browser extension install
-openclaw browser extension path
+openhearth browser extension install
+openhearth browser extension path
 ```
 
 Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → select the printed folder.

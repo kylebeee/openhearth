@@ -42,7 +42,7 @@ describe("web auto-reply", () => {
 
     setLoadConfigMock(() => ({
       messages: {
-        groupChat: { mentionPatterns: ["@openclaw"] },
+        groupChat: { mentionPatterns: ["@openhearth"] },
       },
       session: { store: storePath },
     }));
@@ -125,7 +125,7 @@ describe("web auto-reply", () => {
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["\\bopenclaw\\b"],
+          mentionPatterns: ["\\bopenhearth\\b"],
         },
       },
     }));
@@ -164,9 +164,9 @@ describe("web auto-reply", () => {
 
     expect(resolver).not.toHaveBeenCalled();
 
-    // Text-based mentionPatterns still work (user can type "openclaw" explicitly).
+    // Text-based mentionPatterns still work (user can type "openhearth" explicitly).
     await capturedOnMessage?.({
-      body: "openclaw ping",
+      body: "openhearth ping",
       from: "123@g.us",
       conversationId: "123@g.us",
       chatId: "123@g.us",
@@ -188,7 +188,7 @@ describe("web auto-reply", () => {
   });
   it("emits heartbeat logs with connection metadata", async () => {
     vi.useFakeTimers();
-    const logPath = `/tmp/openclaw-heartbeat-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/openhearth-heartbeat-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     const runtime = {
@@ -229,7 +229,7 @@ describe("web auto-reply", () => {
     expect(content).toMatch(/messagesHandled/);
   });
   it("logs outbound replies to file", async () => {
-    const logPath = `/tmp/openclaw-log-test-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/openhearth-log-test-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     let capturedOnMessage:

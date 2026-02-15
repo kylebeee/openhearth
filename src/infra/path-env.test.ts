@@ -2,24 +2,24 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { ensureOpenClawCliOnPath } from "./path-env.js";
+import { ensureOpenHearthCliOnPath } from "./path-env.js";
 
-describe("ensureOpenClawCliOnPath", () => {
-  it("prepends the bundled app bin dir when a sibling openclaw exists", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-"));
+describe("ensureOpenHearthCliOnPath", () => {
+  it("prepends the bundled app bin dir when a sibling openhearth exists", async () => {
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-path-"));
     try {
       const appBinDir = path.join(tmp, "AppBin");
       await fs.mkdir(appBinDir, { recursive: true });
-      const cliPath = path.join(appBinDir, "openclaw");
+      const cliPath = path.join(appBinDir, "openhearth");
       await fs.writeFile(cliPath, "#!/bin/sh\necho ok\n", "utf-8");
       await fs.chmod(cliPath, 0o755);
 
       const originalPath = process.env.PATH;
-      const originalFlag = process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      const originalFlag = process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       process.env.PATH = "/usr/bin";
-      delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       try {
-        ensureOpenClawCliOnPath({
+        ensureOpenHearthCliOnPath({
           execPath: cliPath,
           cwd: tmp,
           homeDir: tmp,
@@ -30,9 +30,9 @@ describe("ensureOpenClawCliOnPath", () => {
       } finally {
         process.env.PATH = originalPath;
         if (originalFlag === undefined) {
-          delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+          delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
         } else {
-          process.env.OPENCLAW_PATH_BOOTSTRAPPED = originalFlag;
+          process.env.OPENHEARTH_PATH_BOOTSTRAPPED = originalFlag;
         }
       }
     } finally {
@@ -42,11 +42,11 @@ describe("ensureOpenClawCliOnPath", () => {
 
   it("is idempotent", () => {
     const originalPath = process.env.PATH;
-    const originalFlag = process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+    const originalFlag = process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
     process.env.PATH = "/bin";
-    process.env.OPENCLAW_PATH_BOOTSTRAPPED = "1";
+    process.env.OPENHEARTH_PATH_BOOTSTRAPPED = "1";
     try {
-      ensureOpenClawCliOnPath({
+      ensureOpenHearthCliOnPath({
         execPath: "/tmp/does-not-matter",
         cwd: "/tmp",
         homeDir: "/tmp",
@@ -56,22 +56,22 @@ describe("ensureOpenClawCliOnPath", () => {
     } finally {
       process.env.PATH = originalPath;
       if (originalFlag === undefined) {
-        delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+        delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       } else {
-        process.env.OPENCLAW_PATH_BOOTSTRAPPED = originalFlag;
+        process.env.OPENHEARTH_PATH_BOOTSTRAPPED = originalFlag;
       }
     }
   });
 
   it("prepends mise shims when available", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-path-"));
     const originalPath = process.env.PATH;
-    const originalFlag = process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+    const originalFlag = process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
     const originalMiseDataDir = process.env.MISE_DATA_DIR;
     try {
       const appBinDir = path.join(tmp, "AppBin");
       await fs.mkdir(appBinDir, { recursive: true });
-      const appCli = path.join(appBinDir, "openclaw");
+      const appCli = path.join(appBinDir, "openhearth");
       await fs.writeFile(appCli, "#!/bin/sh\necho ok\n", "utf-8");
       await fs.chmod(appCli, 0o755);
 
@@ -80,9 +80,9 @@ describe("ensureOpenClawCliOnPath", () => {
       await fs.mkdir(shimsDir, { recursive: true });
       process.env.MISE_DATA_DIR = miseDataDir;
       process.env.PATH = "/usr/bin";
-      delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
 
-      ensureOpenClawCliOnPath({
+      ensureOpenHearthCliOnPath({
         execPath: appCli,
         cwd: tmp,
         homeDir: tmp,
@@ -98,9 +98,9 @@ describe("ensureOpenClawCliOnPath", () => {
     } finally {
       process.env.PATH = originalPath;
       if (originalFlag === undefined) {
-        delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+        delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       } else {
-        process.env.OPENCLAW_PATH_BOOTSTRAPPED = originalFlag;
+        process.env.OPENHEARTH_PATH_BOOTSTRAPPED = originalFlag;
       }
       if (originalMiseDataDir === undefined) {
         delete process.env.MISE_DATA_DIR;
@@ -112,26 +112,26 @@ describe("ensureOpenClawCliOnPath", () => {
   });
 
   it("only appends project-local node_modules/.bin when explicitly enabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-path-"));
     const originalPath = process.env.PATH;
-    const originalFlag = process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+    const originalFlag = process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
     try {
       const appBinDir = path.join(tmp, "AppBin");
       await fs.mkdir(appBinDir, { recursive: true });
-      const appCli = path.join(appBinDir, "openclaw");
+      const appCli = path.join(appBinDir, "openhearth");
       await fs.writeFile(appCli, "#!/bin/sh\necho ok\n", "utf-8");
       await fs.chmod(appCli, 0o755);
 
       const localBinDir = path.join(tmp, "node_modules", ".bin");
       await fs.mkdir(localBinDir, { recursive: true });
-      const localCli = path.join(localBinDir, "openclaw");
+      const localCli = path.join(localBinDir, "openhearth");
       await fs.writeFile(localCli, "#!/bin/sh\necho ok\n", "utf-8");
       await fs.chmod(localCli, 0o755);
 
       process.env.PATH = "/usr/bin";
-      delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
 
-      ensureOpenClawCliOnPath({
+      ensureOpenHearthCliOnPath({
         execPath: appCli,
         cwd: tmp,
         homeDir: tmp,
@@ -141,9 +141,9 @@ describe("ensureOpenClawCliOnPath", () => {
       expect(withoutOptIn.includes(localBinDir)).toBe(false);
 
       process.env.PATH = "/usr/bin";
-      delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
 
-      ensureOpenClawCliOnPath({
+      ensureOpenHearthCliOnPath({
         execPath: appCli,
         cwd: tmp,
         homeDir: tmp,
@@ -158,18 +158,18 @@ describe("ensureOpenClawCliOnPath", () => {
     } finally {
       process.env.PATH = originalPath;
       if (originalFlag === undefined) {
-        delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+        delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       } else {
-        process.env.OPENCLAW_PATH_BOOTSTRAPPED = originalFlag;
+        process.env.OPENHEARTH_PATH_BOOTSTRAPPED = originalFlag;
       }
       await fs.rm(tmp, { recursive: true, force: true });
     }
   });
 
   it("prepends Linuxbrew dirs when present", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-path-"));
     const originalPath = process.env.PATH;
-    const originalFlag = process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+    const originalFlag = process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
     const originalHomebrewPrefix = process.env.HOMEBREW_PREFIX;
     const originalHomebrewBrewFile = process.env.HOMEBREW_BREW_FILE;
     const originalXdgBinHome = process.env.XDG_BIN_HOME;
@@ -183,12 +183,12 @@ describe("ensureOpenClawCliOnPath", () => {
       await fs.mkdir(linuxbrewSbin, { recursive: true });
 
       process.env.PATH = "/usr/bin";
-      delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+      delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       delete process.env.HOMEBREW_PREFIX;
       delete process.env.HOMEBREW_BREW_FILE;
       delete process.env.XDG_BIN_HOME;
 
-      ensureOpenClawCliOnPath({
+      ensureOpenHearthCliOnPath({
         execPath: path.join(execDir, "node"),
         cwd: tmp,
         homeDir: tmp,
@@ -202,9 +202,9 @@ describe("ensureOpenClawCliOnPath", () => {
     } finally {
       process.env.PATH = originalPath;
       if (originalFlag === undefined) {
-        delete process.env.OPENCLAW_PATH_BOOTSTRAPPED;
+        delete process.env.OPENHEARTH_PATH_BOOTSTRAPPED;
       } else {
-        process.env.OPENCLAW_PATH_BOOTSTRAPPED = originalFlag;
+        process.env.OPENHEARTH_PATH_BOOTSTRAPPED = originalFlag;
       }
       if (originalHomebrewPrefix === undefined) {
         delete process.env.HOMEBREW_PREFIX;

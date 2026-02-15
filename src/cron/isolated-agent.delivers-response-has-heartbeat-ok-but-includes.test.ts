@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CliDeps } from "../cli/deps.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import type { CronJob } from "./types.js";
 import { telegramOutbound } from "../channels/plugins/outbound/telegram.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
@@ -31,12 +31,12 @@ let fixtureCount = 0;
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   const home = path.join(fixtureRoot, `home-${fixtureCount++}`);
-  await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(home, ".openhearth", "agents", "main", "sessions"), { recursive: true });
   return await fn(home);
 }
 
 async function writeSessionStore(home: string) {
-  const dir = path.join(home, ".openclaw", "sessions");
+  const dir = path.join(home, ".openhearth", "sessions");
   await fs.mkdir(dir, { recursive: true });
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(
@@ -62,17 +62,17 @@ async function writeSessionStore(home: string) {
 function makeCfg(
   home: string,
   storePath: string,
-  overrides: Partial<OpenClawConfig> = {},
-): OpenClawConfig {
-  const base: OpenClawConfig = {
+  overrides: Partial<OpenHearthConfig> = {},
+): OpenHearthConfig {
+  const base: OpenHearthConfig = {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "openhearth"),
       },
     },
     session: { store: storePath, mainKey: "main" },
-  } as OpenClawConfig;
+  } as OpenHearthConfig;
   return { ...base, ...overrides };
 }
 
@@ -94,7 +94,7 @@ function makeJob(payload: CronJob["payload"]): CronJob {
 
 describe("runCronIsolatedAgentTurn", () => {
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cron-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-cron-fixtures-"));
   });
 
   afterAll(async () => {
@@ -102,7 +102,7 @@ describe("runCronIsolatedAgentTurn", () => {
   });
 
   beforeEach(() => {
-    vi.stubEnv("OPENCLAW_TEST_FAST", "1");
+    vi.stubEnv("OPENHEARTH_TEST_FAST", "1");
     vi.mocked(runEmbeddedPiAgent).mockReset();
     vi.mocked(loadModelCatalog).mockResolvedValue([]);
     vi.mocked(runSubagentAnnounceFlow).mockReset().mockResolvedValue(true);

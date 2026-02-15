@@ -19,9 +19,9 @@
     "useDefineForClassFields": false,
     "paths": {
       "*": ["./*"],
-      "openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "openclaw/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"]
+      "openhearth/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "openhearth/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "openhearth/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"]
     }
   },
   "include": ["src/**/*", "ui/**/*", "extensions/**/*"],

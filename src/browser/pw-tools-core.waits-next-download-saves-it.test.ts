@@ -30,9 +30,9 @@ const sessionMocks = vi.hoisted(() => ({
 
 vi.mock("./pw-session.js", () => sessionMocks);
 const tmpDirMocks = vi.hoisted(() => ({
-  resolvePreferredOpenClawTmpDir: vi.fn(() => "/tmp/openclaw"),
+  resolvePreferredOpenHearthTmpDir: vi.fn(() => "/tmp/openhearth"),
 }));
-vi.mock("../infra/tmp-openclaw-dir.js", () => tmpDirMocks);
+vi.mock("../infra/tmp-openhearth-dir.js", () => tmpDirMocks);
 const mod = await import("./pw-tools-core.js");
 
 describe("pw-tools-core", () => {
@@ -51,7 +51,7 @@ describe("pw-tools-core", () => {
     for (const fn of Object.values(tmpDirMocks)) {
       fn.mockClear();
     }
-    tmpDirMocks.resolvePreferredOpenClawTmpDir.mockReturnValue("/tmp/openclaw");
+    tmpDirMocks.resolvePreferredOpenHearthTmpDir.mockReturnValue("/tmp/openhearth");
   });
 
   it("waits for the next download and saves it", async () => {
@@ -144,7 +144,7 @@ describe("pw-tools-core", () => {
       saveAs,
     };
 
-    tmpDirMocks.resolvePreferredOpenClawTmpDir.mockReturnValue("/tmp/openclaw-preferred");
+    tmpDirMocks.resolvePreferredOpenHearthTmpDir.mockReturnValue("/tmp/openhearth-preferred");
     currentPage = { on, off };
 
     const p = mod.waitForDownloadViaPlaywright({
@@ -162,14 +162,14 @@ describe("pw-tools-core", () => {
     const expectedRootedDownloadsDir = path.join(
       path.sep,
       "tmp",
-      "openclaw-preferred",
+      "openhearth-preferred",
       "downloads",
     );
-    const expectedDownloadsTail = `${path.join("tmp", "openclaw-preferred", "downloads")}${path.sep}`;
+    const expectedDownloadsTail = `${path.join("tmp", "openhearth-preferred", "downloads")}${path.sep}`;
     expect(path.dirname(String(outPath))).toBe(expectedRootedDownloadsDir);
     expect(path.basename(String(outPath))).toMatch(/-file\.bin$/);
     expect(path.normalize(res.path)).toContain(path.normalize(expectedDownloadsTail));
-    expect(tmpDirMocks.resolvePreferredOpenClawTmpDir).toHaveBeenCalled();
+    expect(tmpDirMocks.resolvePreferredOpenHearthTmpDir).toHaveBeenCalled();
   });
 
   it("sanitizes suggested download filenames to prevent traversal escapes", async () => {
@@ -188,7 +188,7 @@ describe("pw-tools-core", () => {
       saveAs,
     };
 
-    tmpDirMocks.resolvePreferredOpenClawTmpDir.mockReturnValue("/tmp/openclaw-preferred");
+    tmpDirMocks.resolvePreferredOpenHearthTmpDir.mockReturnValue("/tmp/openhearth-preferred");
     currentPage = { on, off };
 
     const p = mod.waitForDownloadViaPlaywright({
@@ -204,11 +204,11 @@ describe("pw-tools-core", () => {
     const outPath = vi.mocked(saveAs).mock.calls[0]?.[0];
     expect(typeof outPath).toBe("string");
     expect(path.dirname(String(outPath))).toBe(
-      path.join(path.sep, "tmp", "openclaw-preferred", "downloads"),
+      path.join(path.sep, "tmp", "openhearth-preferred", "downloads"),
     );
     expect(path.basename(String(outPath))).toMatch(/-passwd$/);
     expect(path.normalize(res.path)).toContain(
-      path.normalize(`${path.join("tmp", "openclaw-preferred", "downloads")}${path.sep}`),
+      path.normalize(`${path.join("tmp", "openhearth-preferred", "downloads")}${path.sep}`),
     );
   });
   it("waits for a matching response and returns its body", async () => {

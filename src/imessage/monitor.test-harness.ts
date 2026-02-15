@@ -85,7 +85,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
 }));
 
 vi.mock("../config/sessions.js", () => ({
-  resolveStorePath: vi.fn(() => "/tmp/openclaw-sessions.json"),
+  resolveStorePath: vi.fn(() => "/tmp/openhearth-sessions.json"),
   updateLastRoute: (...args: unknown[]) => state.updateLastRouteMock(...args),
   readSessionUpdatedAt: vi.fn(() => undefined),
   recordSessionMetaFromInbound: vi.fn().mockResolvedValue(undefined),
@@ -132,7 +132,7 @@ export function installMonitorIMessageProviderTestHooks() {
       },
       session: { mainKey: "main" },
       messages: {
-        groupChat: { mentionPatterns: ["@openclaw"] },
+        groupChat: { mentionPatterns: ["@openhearth"] },
       },
     };
     state.requestMock.mockReset().mockImplementation((method: string) => {

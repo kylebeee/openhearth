@@ -1,11 +1,11 @@
 import type { ZodIssue } from "zod";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import type { DoctorOptions } from "./doctor-prompter.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
-  OpenClawSchema,
+  OpenHearthSchema,
   CONFIG_PATH,
   migrateLegacyConfig,
   readConfigFileSnapshot,
@@ -70,11 +70,11 @@ function resolvePathTarget(root: unknown, path: Array<string | number>): unknown
   return current;
 }
 
-function stripUnknownConfigKeys(config: OpenClawConfig): {
-  config: OpenClawConfig;
+function stripUnknownConfigKeys(config: OpenHearthConfig): {
+  config: OpenHearthConfig;
   removed: string[];
 } {
-  const parsed = OpenClawSchema.safeParse(config);
+  const parsed = OpenHearthSchema.safeParse(config);
   if (parsed.success) {
     return { config, removed: [] };
   }
@@ -106,7 +106,7 @@ function stripUnknownConfigKeys(config: OpenClawConfig): {
   return { config: next, removed };
 }
 
-function noteOpencodeProviderOverrides(cfg: OpenClawConfig) {
+function noteOpencodeProviderOverrides(cfg: OpenHearthConfig) {
   const providers = cfg.models?.providers;
   if (!providers) {
     return;
@@ -157,7 +157,9 @@ function isNumericTelegramUserId(raw: string): boolean {
 
 type TelegramAllowFromUsernameHit = { path: string; entry: string };
 
-function scanTelegramAllowFromUsernameEntries(cfg: OpenClawConfig): TelegramAllowFromUsernameHit[] {
+function scanTelegramAllowFromUsernameEntries(
+  cfg: OpenHearthConfig,
+): TelegramAllowFromUsernameHit[] {
   const hits: TelegramAllowFromUsernameHit[] = [];
   const telegram = cfg.channels?.telegram;
   if (!telegram) {
@@ -230,8 +232,8 @@ function scanTelegramAllowFromUsernameEntries(cfg: OpenClawConfig): TelegramAllo
   return hits;
 }
 
-async function maybeRepairTelegramAllowFromUsernames(cfg: OpenClawConfig): Promise<{
-  config: OpenClawConfig;
+async function maybeRepairTelegramAllowFromUsernames(cfg: OpenHearthConfig): Promise<{
+  config: OpenHearthConfig;
   changes: string[];
 }> {
   const hits = scanTelegramAllowFromUsernameEntries(cfg);
@@ -417,8 +419,8 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
     return changes;
   }
 
-  const targetDir = path.join(home, ".openclaw");
-  const targetPath = path.join(targetDir, "openclaw.json");
+  const targetDir = path.join(home, ".openhearth");
+  const targetPath = path.join(targetDir, "openhearth.json");
   try {
     await fs.access(targetPath);
     return changes;
@@ -477,7 +479,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
 
   let snapshot = await readConfigFileSnapshot();
   const baseCfg = snapshot.config ?? {};
-  let cfg: OpenClawConfig = baseCfg;
+  let cfg: OpenHearthConfig = baseCfg;
   let candidate = structuredClone(baseCfg);
   let pendingChanges = false;
   let shouldWriteConfig = false;
@@ -511,7 +513,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       }
     } else {
       fixHints.push(
-        `Run "${formatCliCommand("openclaw doctor --fix")}" to apply legacy migrations.`,
+        `Run "${formatCliCommand("openhearth doctor --fix")}" to apply legacy migrations.`,
       );
     }
   }
@@ -524,7 +526,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
     if (shouldRepair) {
       cfg = normalized.config;
     } else {
-      fixHints.push(`Run "${formatCliCommand("openclaw doctor --fix")}" to apply these changes.`);
+      fixHints.push(`Run "${formatCliCommand("openhearth doctor --fix")}" to apply these changes.`);
     }
   }
 
@@ -536,7 +538,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
     if (shouldRepair) {
       cfg = autoEnable.config;
     } else {
-      fixHints.push(`Run "${formatCliCommand("openclaw doctor --fix")}" to apply these changes.`);
+      fixHints.push(`Run "${formatCliCommand("openhearth doctor --fix")}" to apply these changes.`);
     }
   }
 
@@ -554,7 +556,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       note(
         [
           `- Telegram allowFrom contains ${hits.length} non-numeric entries (e.g. ${hits[0]?.entry ?? "@"}); Telegram authorization requires numeric sender IDs.`,
-          `- Run "${formatCliCommand("openclaw doctor --fix")}" to auto-resolve @username entries to numeric IDs (requires a Telegram bot token).`,
+          `- Run "${formatCliCommand("openhearth doctor --fix")}" to auto-resolve @username entries to numeric IDs (requires a Telegram bot token).`,
         ].join("\n"),
         "Doctor warnings",
       );
@@ -571,7 +573,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       note(lines, "Doctor changes");
     } else {
       note(lines, "Unknown config keys");
-      fixHints.push('Run "openclaw doctor --fix" to remove these keys.');
+      fixHints.push('Run "openhearth doctor --fix" to remove these keys.');
     }
   }
 

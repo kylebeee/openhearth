@@ -1,17 +1,17 @@
 import type {
   ChannelOnboardingAdapter,
   ChannelOnboardingDmPolicy,
-  OpenClawConfig,
+  OpenHearthConfig,
   DmPolicy,
   WizardPrompter,
   MSTeamsTeamConfig,
-} from "openclaw/plugin-sdk";
+} from "openhearth/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   formatDocsLink,
   promptChannelAccessConfig,
-} from "openclaw/plugin-sdk";
+} from "openhearth/plugin-sdk";
 import {
   parseMSTeamsTeamEntry,
   resolveMSTeamsChannelAllowlist,
@@ -21,7 +21,7 @@ import { resolveMSTeamsCredentials } from "./token.js";
 
 const channel = "msteams" as const;
 
-function setMSTeamsDmPolicy(cfg: OpenClawConfig, dmPolicy: DmPolicy) {
+function setMSTeamsDmPolicy(cfg: OpenHearthConfig, dmPolicy: DmPolicy) {
   const allowFrom =
     dmPolicy === "open"
       ? addWildcardAllowFrom(cfg.channels?.msteams?.allowFrom)?.map((entry) => String(entry))
@@ -39,7 +39,7 @@ function setMSTeamsDmPolicy(cfg: OpenClawConfig, dmPolicy: DmPolicy) {
   };
 }
 
-function setMSTeamsAllowFrom(cfg: OpenClawConfig, allowFrom: string[]): OpenClawConfig {
+function setMSTeamsAllowFrom(cfg: OpenHearthConfig, allowFrom: string[]): OpenHearthConfig {
   return {
     ...cfg,
     channels: {
@@ -64,9 +64,9 @@ function looksLikeGuid(value: string): boolean {
 }
 
 async function promptMSTeamsAllowFrom(params: {
-  cfg: OpenClawConfig;
+  cfg: OpenHearthConfig;
   prompter: WizardPrompter;
-}): Promise<OpenClawConfig> {
+}): Promise<OpenHearthConfig> {
   const existing = params.cfg.channels?.msteams?.allowFrom ?? [];
   await params.prompter.note(
     [
@@ -142,9 +142,9 @@ async function noteMSTeamsCredentialHelp(prompter: WizardPrompter): Promise<void
 }
 
 function setMSTeamsGroupPolicy(
-  cfg: OpenClawConfig,
+  cfg: OpenHearthConfig,
   groupPolicy: "open" | "allowlist" | "disabled",
-): OpenClawConfig {
+): OpenHearthConfig {
   return {
     ...cfg,
     channels: {
@@ -159,9 +159,9 @@ function setMSTeamsGroupPolicy(
 }
 
 function setMSTeamsTeamsAllowlist(
-  cfg: OpenClawConfig,
+  cfg: OpenHearthConfig,
   entries: Array<{ teamKey: string; channelKey?: string }>,
-): OpenClawConfig {
+): OpenHearthConfig {
   const baseTeams = cfg.channels?.msteams?.teams ?? {};
   const teams: Record<string, { channels?: Record<string, unknown> }> = { ...baseTeams };
   for (const entry of entries) {

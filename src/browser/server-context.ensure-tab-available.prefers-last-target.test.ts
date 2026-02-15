@@ -5,10 +5,10 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { BrowserServerState } from "./server-context.js";
 import { createBrowserRouteContext } from "./server-context.js";
 
-const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/openclaw" }));
+const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/openhearth" }));
 
 beforeAll(async () => {
-  chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-chrome-user-data-"));
+  chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-chrome-user-data-"));
 });
 
 afterAll(async () => {
@@ -18,11 +18,11 @@ afterAll(async () => {
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchOpenClawChrome: vi.fn(async () => {
+  launchOpenHearthChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => chromeUserDataDir.dir),
-  stopOpenClawChrome: vi.fn(async () => {}),
+  resolveOpenHearthUserDataDir: vi.fn(() => chromeUserDataDir.dir),
+  stopOpenHearthChrome: vi.fn(async () => {}),
 }));
 
 describe("browser server-context ensureTabAvailable", () => {
@@ -89,7 +89,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          openhearth: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -149,7 +149,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          openhearth: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -200,7 +200,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          openhearth: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),

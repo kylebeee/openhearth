@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/config.js";
+import type { OpenHearthConfig } from "../../config/config.js";
 import type {
   SandboxToolPolicy,
   SandboxToolPolicyResolved,
@@ -33,7 +33,7 @@ export function isToolAllowed(policy: SandboxToolPolicy, name: string) {
 }
 
 export function resolveSandboxToolPolicyForAgent(
-  cfg?: OpenClawConfig,
+  cfg?: OpenHearthConfig,
   agentId?: string,
 ): SandboxToolPolicyResolved {
   const agentConfig = cfg && agentId ? resolveAgentConfig(cfg, agentId) : undefined;

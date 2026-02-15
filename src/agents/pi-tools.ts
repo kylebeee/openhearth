@@ -5,7 +5,7 @@ import {
   createWriteTool,
   readTool,
 } from "@mariozechner/pi-coding-agent";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import type { ModelAuthMode } from "./model-auth.js";
 import type { AnyAgentTool } from "./pi-tools.types.js";
 import type { SandboxContext } from "./sandbox.js";
@@ -22,7 +22,7 @@ import {
   type ProcessToolDefaults,
 } from "./bash-tools.js";
 import { listChannelAgentTools } from "./channel-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenHearthTools } from "./openhearth-tools.js";
 import { wrapToolWithAbortSignal } from "./pi-tools.abort.js";
 import { wrapToolWithBeforeToolCallHook } from "./pi-tools.before-tool-call.js";
 import {
@@ -34,7 +34,7 @@ import {
 import {
   assertRequiredParams,
   CLAUDE_PARAM_GROUPS,
-  createOpenClawReadTool,
+  createOpenHearthReadTool,
   createSandboxedEditTool,
   createSandboxedReadTool,
   createSandboxedWriteTool,
@@ -86,7 +86,7 @@ function isApplyPatchAllowedForModel(params: {
   });
 }
 
-function resolveExecConfig(params: { cfg?: OpenClawConfig; agentId?: string }) {
+function resolveExecConfig(params: { cfg?: OpenHearthConfig; agentId?: string }) {
   const cfg = params.cfg;
   const globalExec = cfg?.tools?.exec;
   const agentExec =
@@ -116,7 +116,7 @@ export const __testing = {
   assertRequiredParams,
 } as const;
 
-export function createOpenClawCodingTools(options?: {
+export function createOpenHearthCodingTools(options?: {
   exec?: ExecToolDefaults & ProcessToolDefaults;
   messageProvider?: string;
   agentAccountId?: string;
@@ -126,7 +126,7 @@ export function createOpenClawCodingTools(options?: {
   sessionKey?: string;
   agentDir?: string;
   workspaceDir?: string;
-  config?: OpenClawConfig;
+  config?: OpenHearthConfig;
   abortSignal?: AbortSignal;
   /**
    * Provider of the currently selected model (used for provider-specific tool quirks).
@@ -265,7 +265,7 @@ export function createOpenClawCodingTools(options?: {
         ];
       }
       const freshReadTool = createReadTool(workspaceRoot);
-      return [createOpenClawReadTool(freshReadTool)];
+      return [createOpenHearthReadTool(freshReadTool)];
     }
     if (tool.name === "bash" || tool.name === execToolName) {
       return [];
@@ -346,7 +346,7 @@ export function createOpenClawCodingTools(options?: {
     processTool as unknown as AnyAgentTool,
     // Channel docking: include channel-defined agent tools (login, etc.).
     ...listChannelAgentTools({ cfg: options?.config }),
-    ...createOpenClawTools({
+    ...createOpenHearthTools({
       sandboxBrowserBridgeUrl: sandbox?.browser?.bridgeUrl,
       allowHostBrowserControl: sandbox ? sandbox.browserAllowHostControl : true,
       agentSessionKey: options?.sessionKey,

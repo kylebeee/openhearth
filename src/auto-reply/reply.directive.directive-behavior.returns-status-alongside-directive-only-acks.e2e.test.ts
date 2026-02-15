@@ -30,7 +30,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           tools: {
@@ -72,7 +72,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
             list: [
               {
@@ -109,7 +109,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -141,7 +141,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -174,7 +174,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -189,7 +189,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },

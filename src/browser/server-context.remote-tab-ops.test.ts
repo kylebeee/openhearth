@@ -7,10 +7,10 @@ import * as cdpModule from "./cdp.js";
 import * as pwAiModule from "./pw-ai-module.js";
 import { createBrowserRouteContext } from "./server-context.js";
 
-const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/openclaw" }));
+const chromeUserDataDir = vi.hoisted(() => ({ dir: "/tmp/openhearth" }));
 
 beforeAll(async () => {
-  chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-chrome-user-data-"));
+  chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-chrome-user-data-"));
 });
 
 afterAll(async () => {
@@ -20,11 +20,11 @@ afterAll(async () => {
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchOpenClawChrome: vi.fn(async () => {
+  launchOpenHearthChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => chromeUserDataDir.dir),
-  stopOpenClawChrome: vi.fn(async () => {}),
+  resolveOpenHearthUserDataDir: vi.fn(() => chromeUserDataDir.dir),
+  stopOpenHearthChrome: vi.fn(async () => {}),
 }));
 
 const originalFetch = globalThis.fetch;
@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 function makeState(
-  profile: "remote" | "openclaw",
+  profile: "remote" | "openhearth",
 ): BrowserServerState & { profiles: Map<string, { lastTargetId?: string | null }> } {
   return {
     // oxlint-disable-next-line typescript/no-explicit-any
@@ -60,7 +60,7 @@ function makeState(
           cdpPort: 443,
           color: "#00AA00",
         },
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        openhearth: { cdpPort: 18800, color: "#FF4500" },
       },
     },
     profiles: new Map(),
@@ -277,12 +277,12 @@ describe("browser server-context tab selection state", () => {
 
     global.fetch = fetchMock;
 
-    const state = makeState("openclaw");
+    const state = makeState("openhearth");
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const openclaw = ctx.forProfile("openclaw");
+    const openhearth = ctx.forProfile("openhearth");
 
-    const opened = await openclaw.openTab("https://created.example");
+    const opened = await openhearth.openTab("https://created.example");
     expect(opened.targetId).toBe("CREATED");
-    expect(state.profiles.get("openclaw")?.lastTargetId).toBe("CREATED");
+    expect(state.profiles.get("openhearth")?.lastTargetId).toBe("CREATED");
   });
 });

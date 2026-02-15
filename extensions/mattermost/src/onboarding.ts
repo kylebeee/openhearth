@@ -1,5 +1,9 @@
-import type { ChannelOnboardingAdapter, OpenClawConfig, WizardPrompter } from "openclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
+import type {
+  ChannelOnboardingAdapter,
+  OpenHearthConfig,
+  WizardPrompter,
+} from "openhearth/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openhearth/plugin-sdk/account-id";
 import {
   listMattermostAccountIds,
   resolveDefaultMattermostAccountId,
@@ -16,7 +20,7 @@ async function noteMattermostSetup(prompter: WizardPrompter): Promise<void> {
       "2) Create a bot + copy its token",
       "3) Use your server base URL (e.g., https://chat.example.com)",
       "Tip: the bot must be a member of any channel you want it to monitor.",
-      "Docs: https://docs.openclaw.ai/channels/mattermost",
+      "Docs: https://docs.openhearth.ai/channels/mattermost",
     ].join("\n"),
     "Mattermost bot token",
   );
@@ -176,7 +180,7 @@ export const mattermostOnboardingAdapter: ChannelOnboardingAdapter = {
 
     return { cfg: next, accountId };
   },
-  disable: (cfg: OpenClawConfig) => ({
+  disable: (cfg: OpenHearthConfig) => ({
     ...cfg,
     channels: {
       ...cfg.channels,

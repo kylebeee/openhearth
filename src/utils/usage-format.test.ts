@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import {
   estimateUsageCost,
   formatTokenCount,
@@ -35,7 +35,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as OpenHearthConfig;
 
     const cost = resolveModelCostConfig({
       provider: "test",

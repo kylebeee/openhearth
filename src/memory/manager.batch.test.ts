@@ -149,7 +149,7 @@ describe("memory indexing with OpenAI batches", () => {
   }
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mem-batch-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-mem-batch-"));
   });
 
   afterAll(async () => {

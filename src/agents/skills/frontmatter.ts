@@ -1,6 +1,6 @@
 import type { Skill } from "@mariozechner/pi-coding-agent";
 import type {
-  OpenClawSkillMetadata,
+  OpenHearthSkillMetadata,
   ParsedSkillFrontmatter,
   SkillEntry,
   SkillInstallSpec,
@@ -11,7 +11,7 @@ import {
   getFrontmatterString,
   normalizeStringList,
   parseFrontmatterBool,
-  resolveOpenClawManifestBlock,
+  resolveOpenHearthManifestBlock,
 } from "../../shared/frontmatter.js";
 
 export function parseFrontmatter(content: string): ParsedSkillFrontmatter {
@@ -76,10 +76,10 @@ function parseInstallSpec(input: unknown): SkillInstallSpec | undefined {
   return spec;
 }
 
-export function resolveOpenClawMetadata(
+export function resolveOpenHearthMetadata(
   frontmatter: ParsedSkillFrontmatter,
-): OpenClawSkillMetadata | undefined {
-  const metadataObj = resolveOpenClawManifestBlock({ frontmatter });
+): OpenHearthSkillMetadata | undefined {
+  const metadataObj = resolveOpenHearthManifestBlock({ frontmatter });
   if (!metadataObj) {
     return undefined;
   }

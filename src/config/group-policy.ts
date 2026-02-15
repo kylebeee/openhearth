@@ -1,5 +1,7 @@
 import type { ChannelId } from "../channels/plugins/types.js";
-import type { OpenClawConfig } from "./config.js";
+import type { HearthMemberRegistry } from "../hearth/members/registry.js";
+import type { HearthMember } from "../hearth/members/types.js";
+import type { OpenHearthConfig } from "./config.js";
 import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
 import { normalizeAccountId } from "../routing/session-key.js";
 
@@ -119,7 +121,7 @@ export function resolveToolsBySender(
 }
 
 function resolveChannelGroups(
-  cfg: OpenClawConfig,
+  cfg: OpenHearthConfig,
   channel: GroupPolicyChannel,
   accountId?: string | null,
 ): ChannelGroups | undefined {
@@ -144,7 +146,7 @@ function resolveChannelGroups(
 }
 
 export function resolveChannelGroupPolicy(params: {
-  cfg: OpenClawConfig;
+  cfg: OpenHearthConfig;
   channel: GroupPolicyChannel;
   groupId?: string | null;
   accountId?: string | null;
@@ -169,7 +171,7 @@ export function resolveChannelGroupPolicy(params: {
 }
 
 export function resolveChannelGroupRequireMention(params: {
-  cfg: OpenClawConfig;
+  cfg: OpenHearthConfig;
   channel: GroupPolicyChannel;
   groupId?: string | null;
   accountId?: string | null;
@@ -200,7 +202,7 @@ export function resolveChannelGroupRequireMention(params: {
 
 export function resolveChannelGroupToolsPolicy(
   params: {
-    cfg: OpenClawConfig;
+    cfg: OpenHearthConfig;
     channel: GroupPolicyChannel;
     groupId?: string | null;
     accountId?: string | null;
@@ -235,4 +237,63 @@ export function resolveChannelGroupToolsPolicy(
     return defaultConfig.tools;
   }
   return undefined;
+}
+
+/**
+ * Resolve a Hearth member from group policy sender information.
+ * Attempts to match the sender to a HearthMember via the registry,
+ * falling back to the existing GroupToolPolicySender for non-Hearth contexts.
+ */
+export function resolveHearthMemberPolicy(params: {
+  cfg: OpenHearthConfig;
+  channel: GroupPolicyChannel;
+  registry?: HearthMemberRegistry;
+  senderId?: string | null;
+  senderName?: string | null;
+  senderUsername?: string | null;
+  senderE164?: string | null;
+}): {
+  member?: HearthMember;
+  toolPolicy?: GroupToolPolicyConfig;
+} {
+  const { cfg, channel, registry, senderId, senderName, senderUsername, senderE164 } = params;
+
+  // If Hearth is not enabled or no registry, fall back to standard policy
+  if (!cfg.hearth?.enabled || !registry) {
+    const toolPolicy = resolveChannelGroupToolsPolicy({
+      cfg,
+      channel,
+      senderId,
+      senderName,
+      senderUsername,
+      senderE164,
+    });
+    return { toolPolicy };
+  }
+
+  // Try to resolve member via registry
+  const channelStr = channel.toString().toLowerCase();
+  let member: HearthMember | undefined;
+
+  if (senderId) {
+    member = registry.resolveByChannelIdentity(channelStr, senderId);
+  }
+  if (!member && senderUsername) {
+    member = registry.resolveByChannelIdentity(channelStr, senderUsername);
+  }
+  if (!member && senderE164) {
+    member = registry.resolveByChannelIdentity(channelStr, senderE164);
+  }
+
+  // Resolve tool policy using standard group policy mechanism
+  const toolPolicy = resolveChannelGroupToolsPolicy({
+    cfg,
+    channel,
+    senderId,
+    senderName,
+    senderUsername,
+    senderE164,
+  });
+
+  return { member, toolPolicy };
 }

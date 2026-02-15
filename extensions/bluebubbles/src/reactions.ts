@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import type { OpenHearthConfig } from "openhearth/plugin-sdk";
 import { resolveBlueBubblesAccount } from "./accounts.js";
 import { getCachedBlueBubblesPrivateApiStatus } from "./probe.js";
 import { blueBubblesFetchWithTimeout, buildBlueBubblesApiUrl } from "./types.js";
@@ -8,7 +8,7 @@ export type BlueBubblesReactionOpts = {
   password?: string;
   accountId?: string;
   timeoutMs?: number;
-  cfg?: OpenClawConfig;
+  cfg?: OpenHearthConfig;
 };
 
 const REACTION_TYPES = new Set(["love", "like", "dislike", "laugh", "emphasize", "question"]);

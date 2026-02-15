@@ -1,7 +1,7 @@
 import type { Api, Model } from "@mariozechner/pi-ai";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { OpenHearthConfig } from "../../config/config.js";
 import type { ModelDefinitionConfig } from "../../config/types.js";
-import { resolveOpenClawAgentDir } from "../agent-paths.js";
+import { resolveOpenHearthAgentDir } from "../agent-paths.js";
 import { DEFAULT_CONTEXT_TOKENS } from "../defaults.js";
 import { normalizeModelCompat } from "../model-compat.js";
 import { resolveForwardCompatModel } from "../model-forward-compat.js";
@@ -37,7 +37,7 @@ export function buildInlineProviderModels(
   });
 }
 
-export function buildModelAliasLines(cfg?: OpenClawConfig) {
+export function buildModelAliasLines(cfg?: OpenHearthConfig) {
   const models = cfg?.agents?.defaults?.models ?? {};
   const entries: Array<{ alias: string; model: string }> = [];
   for (const [keyRaw, entryRaw] of Object.entries(models)) {
@@ -60,14 +60,14 @@ export function resolveModel(
   provider: string,
   modelId: string,
   agentDir?: string,
-  cfg?: OpenClawConfig,
+  cfg?: OpenHearthConfig,
 ): {
   model?: Model<Api>;
   error?: string;
   authStorage: AuthStorage;
   modelRegistry: ModelRegistry;
 } {
-  const resolvedAgentDir = agentDir ?? resolveOpenClawAgentDir();
+  const resolvedAgentDir = agentDir ?? resolveOpenHearthAgentDir();
   const authStorage = discoverAuthStorage(resolvedAgentDir);
   const modelRegistry = discoverModels(authStorage, resolvedAgentDir);
   const model = modelRegistry.find(provider, modelId) as Model<Api> | null;

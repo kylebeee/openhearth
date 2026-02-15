@@ -50,16 +50,16 @@ async function removeDirWithRetry(dir: string): Promise<void> {
 function captureEnv(): EnvSnapshot {
   return {
     home: process.env.HOME,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
-    configPath: process.env.OPENCLAW_CONFIG_PATH,
-    skipChannels: process.env.OPENCLAW_SKIP_CHANNELS,
-    skipGmail: process.env.OPENCLAW_SKIP_GMAIL_WATCHER,
-    skipCron: process.env.OPENCLAW_SKIP_CRON,
-    skipCanvas: process.env.OPENCLAW_SKIP_CANVAS_HOST,
-    token: process.env.OPENCLAW_GATEWAY_TOKEN,
-    password: process.env.OPENCLAW_GATEWAY_PASSWORD,
+    stateDir: process.env.OPENHEARTH_STATE_DIR,
+    configPath: process.env.OPENHEARTH_CONFIG_PATH,
+    skipChannels: process.env.OPENHEARTH_SKIP_CHANNELS,
+    skipGmail: process.env.OPENHEARTH_SKIP_GMAIL_WATCHER,
+    skipCron: process.env.OPENHEARTH_SKIP_CRON,
+    skipCanvas: process.env.OPENHEARTH_SKIP_CANVAS_HOST,
+    token: process.env.OPENHEARTH_GATEWAY_TOKEN,
+    password: process.env.OPENHEARTH_GATEWAY_PASSWORD,
     customApiKey: process.env.CUSTOM_API_KEY,
-    disableConfigCache: process.env.OPENCLAW_DISABLE_CONFIG_CACHE,
+    disableConfigCache: process.env.OPENHEARTH_DISABLE_CONFIG_CACHE,
   };
 }
 
@@ -73,16 +73,16 @@ function restoreEnvVar(key: keyof NodeJS.ProcessEnv, value: string | undefined):
 
 function restoreEnv(prev: EnvSnapshot): void {
   restoreEnvVar("HOME", prev.home);
-  restoreEnvVar("OPENCLAW_STATE_DIR", prev.stateDir);
-  restoreEnvVar("OPENCLAW_CONFIG_PATH", prev.configPath);
-  restoreEnvVar("OPENCLAW_SKIP_CHANNELS", prev.skipChannels);
-  restoreEnvVar("OPENCLAW_SKIP_GMAIL_WATCHER", prev.skipGmail);
-  restoreEnvVar("OPENCLAW_SKIP_CRON", prev.skipCron);
-  restoreEnvVar("OPENCLAW_SKIP_CANVAS_HOST", prev.skipCanvas);
-  restoreEnvVar("OPENCLAW_GATEWAY_TOKEN", prev.token);
-  restoreEnvVar("OPENCLAW_GATEWAY_PASSWORD", prev.password);
+  restoreEnvVar("OPENHEARTH_STATE_DIR", prev.stateDir);
+  restoreEnvVar("OPENHEARTH_CONFIG_PATH", prev.configPath);
+  restoreEnvVar("OPENHEARTH_SKIP_CHANNELS", prev.skipChannels);
+  restoreEnvVar("OPENHEARTH_SKIP_GMAIL_WATCHER", prev.skipGmail);
+  restoreEnvVar("OPENHEARTH_SKIP_CRON", prev.skipCron);
+  restoreEnvVar("OPENHEARTH_SKIP_CANVAS_HOST", prev.skipCanvas);
+  restoreEnvVar("OPENHEARTH_GATEWAY_TOKEN", prev.token);
+  restoreEnvVar("OPENHEARTH_GATEWAY_PASSWORD", prev.password);
   restoreEnvVar("CUSTOM_API_KEY", prev.customApiKey);
-  restoreEnvVar("OPENCLAW_DISABLE_CONFIG_CACHE", prev.disableConfigCache);
+  restoreEnvVar("OPENHEARTH_DISABLE_CONFIG_CACHE", prev.disableConfigCache);
 }
 
 async function withOnboardEnv(
@@ -91,20 +91,20 @@ async function withOnboardEnv(
 ): Promise<void> {
   const prev = captureEnv();
 
-  process.env.OPENCLAW_SKIP_CHANNELS = "1";
-  process.env.OPENCLAW_SKIP_GMAIL_WATCHER = "1";
-  process.env.OPENCLAW_SKIP_CRON = "1";
-  process.env.OPENCLAW_SKIP_CANVAS_HOST = "1";
-  process.env.OPENCLAW_DISABLE_CONFIG_CACHE = "1";
-  delete process.env.OPENCLAW_GATEWAY_TOKEN;
-  delete process.env.OPENCLAW_GATEWAY_PASSWORD;
+  process.env.OPENHEARTH_SKIP_CHANNELS = "1";
+  process.env.OPENHEARTH_SKIP_GMAIL_WATCHER = "1";
+  process.env.OPENHEARTH_SKIP_CRON = "1";
+  process.env.OPENHEARTH_SKIP_CANVAS_HOST = "1";
+  process.env.OPENHEARTH_DISABLE_CONFIG_CACHE = "1";
+  delete process.env.OPENHEARTH_GATEWAY_TOKEN;
+  delete process.env.OPENHEARTH_GATEWAY_PASSWORD;
   delete process.env.CUSTOM_API_KEY;
 
   const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
-  const configPath = path.join(tempHome, "openclaw.json");
+  const configPath = path.join(tempHome, "openhearth.json");
   process.env.HOME = tempHome;
-  process.env.OPENCLAW_STATE_DIR = tempHome;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
+  process.env.OPENHEARTH_STATE_DIR = tempHome;
+  process.env.OPENHEARTH_CONFIG_PATH = configPath;
 
   const runtime: RuntimeMock = {
     log: () => {},
@@ -157,7 +157,7 @@ async function expectApiKeyProfile(params: {
 
 describe("onboard (non-interactive): provider auth", () => {
   it("stores MiniMax API key and uses global baseUrl by default", async () => {
-    await withOnboardEnv("openclaw-onboard-minimax-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-minimax-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -190,7 +190,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("supports MiniMax CN API endpoint auth choice", async () => {
-    await withOnboardEnv("openclaw-onboard-minimax-cn-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-minimax-cn-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -223,7 +223,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores Z.AI API key and uses global baseUrl by default", async () => {
-    await withOnboardEnv("openclaw-onboard-zai-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-zai-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -252,7 +252,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("supports Z.AI CN coding endpoint auth choice", async () => {
-    await withOnboardEnv("openclaw-onboard-zai-cn-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-zai-cn-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -277,7 +277,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores xAI API key and sets default model", async () => {
-    await withOnboardEnv("openclaw-onboard-xai-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-xai-", async ({ configPath, runtime }) => {
       const rawKey = "xai-test-\r\nkey";
       await runNonInteractive(
         {
@@ -305,7 +305,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores Vercel AI Gateway API key and sets default model", async () => {
-    await withOnboardEnv("openclaw-onboard-ai-gateway-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-ai-gateway-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -338,7 +338,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores token auth profile", async () => {
-    await withOnboardEnv("openclaw-onboard-token-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-token-", async ({ configPath, runtime }) => {
       const cleanToken = `sk-ant-oat01-${"a".repeat(80)}`;
       const token = `${cleanToken.slice(0, 30)}\r${cleanToken.slice(30)}`;
 
@@ -375,7 +375,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores OpenAI API key and sets OpenAI default model", async () => {
-    await withOnboardEnv("openclaw-onboard-openai-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-openai-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -398,7 +398,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("rejects vLLM auth choice in non-interactive mode", async () => {
-    await withOnboardEnv("openclaw-onboard-vllm-non-interactive-", async ({ runtime }) => {
+    await withOnboardEnv("openhearth-onboard-vllm-non-interactive-", async ({ runtime }) => {
       await expect(
         runNonInteractive(
           {
@@ -416,7 +416,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores LiteLLM API key and sets default model", async () => {
-    await withOnboardEnv("openclaw-onboard-litellm-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-litellm-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -447,7 +447,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("stores Cloudflare AI Gateway API key and metadata", async () => {
-    await withOnboardEnv("openclaw-onboard-cf-gateway-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-cf-gateway-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -483,42 +483,47 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("infers Cloudflare auth choice from API key flags", async () => {
-    await withOnboardEnv("openclaw-onboard-cf-gateway-infer-", async ({ configPath, runtime }) => {
-      await runNonInteractive(
-        {
-          nonInteractive: true,
-          cloudflareAiGatewayAccountId: "cf-account-id",
-          cloudflareAiGatewayGatewayId: "cf-gateway-id",
-          cloudflareAiGatewayApiKey: "cf-gateway-test-key",
-          skipHealth: true,
-          skipChannels: true,
-          skipSkills: true,
-          json: true,
-        },
-        runtime,
-      );
+    await withOnboardEnv(
+      "openhearth-onboard-cf-gateway-infer-",
+      async ({ configPath, runtime }) => {
+        await runNonInteractive(
+          {
+            nonInteractive: true,
+            cloudflareAiGatewayAccountId: "cf-account-id",
+            cloudflareAiGatewayGatewayId: "cf-gateway-id",
+            cloudflareAiGatewayApiKey: "cf-gateway-test-key",
+            skipHealth: true,
+            skipChannels: true,
+            skipSkills: true,
+            json: true,
+          },
+          runtime,
+        );
 
-      const cfg = await readJsonFile<{
-        auth?: { profiles?: Record<string, { provider?: string; mode?: string }> };
-        agents?: { defaults?: { model?: { primary?: string } } };
-      }>(configPath);
+        const cfg = await readJsonFile<{
+          auth?: { profiles?: Record<string, { provider?: string; mode?: string }> };
+          agents?: { defaults?: { model?: { primary?: string } } };
+        }>(configPath);
 
-      expect(cfg.auth?.profiles?.["cloudflare-ai-gateway:default"]?.provider).toBe(
-        "cloudflare-ai-gateway",
-      );
-      expect(cfg.auth?.profiles?.["cloudflare-ai-gateway:default"]?.mode).toBe("api_key");
-      expect(cfg.agents?.defaults?.model?.primary).toBe("cloudflare-ai-gateway/claude-sonnet-4-5");
-      await expectApiKeyProfile({
-        profileId: "cloudflare-ai-gateway:default",
-        provider: "cloudflare-ai-gateway",
-        key: "cf-gateway-test-key",
-        metadata: { accountId: "cf-account-id", gatewayId: "cf-gateway-id" },
-      });
-    });
+        expect(cfg.auth?.profiles?.["cloudflare-ai-gateway:default"]?.provider).toBe(
+          "cloudflare-ai-gateway",
+        );
+        expect(cfg.auth?.profiles?.["cloudflare-ai-gateway:default"]?.mode).toBe("api_key");
+        expect(cfg.agents?.defaults?.model?.primary).toBe(
+          "cloudflare-ai-gateway/claude-sonnet-4-5",
+        );
+        await expectApiKeyProfile({
+          profileId: "cloudflare-ai-gateway:default",
+          provider: "cloudflare-ai-gateway",
+          key: "cf-gateway-test-key",
+          metadata: { accountId: "cf-account-id", gatewayId: "cf-gateway-id" },
+        });
+      },
+    );
   }, 60_000);
 
   it("infers Together auth choice from --together-api-key and sets default model", async () => {
-    await withOnboardEnv("openclaw-onboard-together-infer-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-together-infer-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -548,7 +553,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("infers QIANFAN auth choice from --qianfan-api-key and sets default model", async () => {
-    await withOnboardEnv("openclaw-onboard-qianfan-infer-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-qianfan-infer-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -578,7 +583,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("configures a custom provider from non-interactive flags", async () => {
-    await withOnboardEnv("openclaw-onboard-custom-provider-", async ({ configPath, runtime }) => {
+    await withOnboardEnv("openhearth-onboard-custom-provider-", async ({ configPath, runtime }) => {
       await runNonInteractive(
         {
           nonInteractive: true,
@@ -621,7 +626,7 @@ describe("onboard (non-interactive): provider auth", () => {
 
   it("infers custom provider auth choice from custom flags", async () => {
     await withOnboardEnv(
-      "openclaw-onboard-custom-provider-infer-",
+      "openhearth-onboard-custom-provider-infer-",
       async ({ configPath, runtime }) => {
         await runNonInteractive(
           {
@@ -663,7 +668,7 @@ describe("onboard (non-interactive): provider auth", () => {
 
   it("uses CUSTOM_API_KEY env fallback for non-interactive custom provider auth", async () => {
     await withOnboardEnv(
-      "openclaw-onboard-custom-provider-env-fallback-",
+      "openhearth-onboard-custom-provider-env-fallback-",
       async ({ configPath, runtime }) => {
         process.env.CUSTOM_API_KEY = "custom-env-key";
 
@@ -701,7 +706,7 @@ describe("onboard (non-interactive): provider auth", () => {
 
   it("uses matching profile fallback for non-interactive custom provider auth", async () => {
     await withOnboardEnv(
-      "openclaw-onboard-custom-provider-profile-fallback-",
+      "openhearth-onboard-custom-provider-profile-fallback-",
       async ({ configPath, runtime }) => {
         const { upsertAuthProfile } = await import("../agents/auth-profiles.js");
         upsertAuthProfile({
@@ -747,7 +752,7 @@ describe("onboard (non-interactive): provider auth", () => {
 
   it("fails custom provider auth when compatibility is invalid", async () => {
     await withOnboardEnv(
-      "openclaw-onboard-custom-provider-invalid-compat-",
+      "openhearth-onboard-custom-provider-invalid-compat-",
       async ({ runtime }) => {
         await expect(
           runNonInteractive(
@@ -770,7 +775,7 @@ describe("onboard (non-interactive): provider auth", () => {
   }, 60_000);
 
   it("fails custom provider auth when explicit provider id is invalid", async () => {
-    await withOnboardEnv("openclaw-onboard-custom-provider-invalid-id-", async ({ runtime }) => {
+    await withOnboardEnv("openhearth-onboard-custom-provider-invalid-id-", async ({ runtime }) => {
       await expect(
         runNonInteractive(
           {
@@ -794,7 +799,7 @@ describe("onboard (non-interactive): provider auth", () => {
 
   it("fails inferred custom auth when required flags are incomplete", async () => {
     await withOnboardEnv(
-      "openclaw-onboard-custom-provider-missing-required-",
+      "openhearth-onboard-custom-provider-missing-required-",
       async ({ runtime }) => {
         await expect(
           runNonInteractive(

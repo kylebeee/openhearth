@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "OpenClaw",
+  "name": "OpenHearth",
   "description": "Self-hosted gateway that connects WhatsApp, Telegram, Discord, iMessage, and more to AI coding agents. Run a single Gateway process on your own machine and message your AI assistant from anywhere.",
   "theme": "mint",
   "icons": {
@@ -36,12 +36,12 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/openclaw/openclaw",
+        "href": "https://github.com/kylebeee/openhearth",
         "icon": "github"
       },
       {
         "label": "Releases",
-        "href": "https://github.com/openclaw/openclaw/releases",
+        "href": "https://github.com/kylebeee/openhearth/releases",
         "icon": "package"
       }
     ]
@@ -261,27 +261,27 @@
     },
     {
       "source": "/clawd",
-      "destination": "/start/openclaw"
+      "destination": "/start/openhearth"
     },
     {
       "source": "/start/clawd",
-      "destination": "/start/openclaw"
+      "destination": "/start/openhearth"
     },
     {
       "source": "/start/clawd/",
-      "destination": "/start/openclaw"
+      "destination": "/start/openhearth"
     },
     {
-      "source": "/clawhub",
-      "destination": "/tools/clawhub"
+      "source": "/hearthub",
+      "destination": "/tools/hearthub"
     },
     {
       "source": "/clawdhub",
-      "destination": "/tools/clawhub"
+      "destination": "/tools/hearthub"
     },
     {
       "source": "/tools/clawdhub",
-      "destination": "/tools/clawhub"
+      "destination": "/tools/hearthub"
     },
     {
       "source": "/configuration",
@@ -827,7 +827,7 @@
               },
               {
                 "group": "Guides",
-                "pages": ["start/openclaw"]
+                "pages": ["start/openhearth"]
               }
             ]
           },
@@ -958,6 +958,28 @@
             ]
           },
           {
+            "tab": "Hearth",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["hearth/index"]
+              },
+              {
+                "group": "Core concepts",
+                "pages": [
+                  "hearth/members",
+                  "hearth/privacy",
+                  "hearth/guardrails",
+                  "hearth/autonomy"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": ["hearth/configuration", "hearth/tools", "hearth/architecture"]
+              }
+            ]
+          },
+          {
             "tab": "Tools",
             "groups": [
               {
@@ -996,7 +1018,7 @@
                   "tools/slash-commands",
                   "tools/skills",
                   "tools/skills-config",
-                  "tools/clawhub",
+                  "tools/hearthub",
                   "tools/plugin"
                 ]
               },
@@ -1338,7 +1360,7 @@
               },
               {
                 "group": "指南",
-                "pages": ["zh-CN/start/openclaw"]
+                "pages": ["zh-CN/start/openhearth"]
               }
             ]
           },
@@ -1513,7 +1535,7 @@
                   "zh-CN/tools/slash-commands",
                   "zh-CN/tools/skills",
                   "zh-CN/tools/skills-config",
-                  "zh-CN/tools/clawhub",
+                  "zh-CN/tools/hearthub",
                   "zh-CN/tools/plugin"
                 ]
               },

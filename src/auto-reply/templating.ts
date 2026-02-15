@@ -84,7 +84,7 @@ export type MsgContext = {
   Sticker?: StickerMetadata;
   OutputDir?: string;
   OutputBase?: string;
-  /** Remote host for SCP when media lives on a different machine (e.g., openclaw@192.168.64.3). */
+  /** Remote host for SCP when media lives on a different machine (e.g., openhearth@192.168.64.3). */
   MediaRemoteHost?: string;
   Transcript?: string;
   MediaUnderstanding?: MediaUnderstandingOutput[];
@@ -141,6 +141,19 @@ export type MsgContext = {
    * Used for hook confirmation messages like "Session context saved to memory".
    */
   HookMessages?: string[];
+
+  // -- Hearth multi-party fields --
+
+  /** Resolved Hearth member id for the sender. */
+  HearthMemberId?: string;
+  /** Resolved Hearth member display name. */
+  HearthMemberName?: string;
+  /** Resolved Hearth member role (owner | admin | member | guest). */
+  HearthMemberRole?: string;
+  /** Hearth group key for the current session. */
+  HearthGroupId?: string;
+  /** Privacy layer for the current message context (public | subgroup | private | agent-inferred). */
+  HearthPrivacyLayer?: string;
 };
 
 export type FinalizedMsgContext = Omit<MsgContext, "CommandAuthorized"> & {

@@ -1,16 +1,16 @@
-# OpenClaw gateway — Podman Quadlet (rootless)
-# Installed by setup-podman.sh into openclaw's ~/.config/containers/systemd/
-# {{OPENCLAW_HOME}} is replaced at install time.
+# OpenHearth gateway — Podman Quadlet (rootless)
+# Installed by setup-podman.sh into openhearth's ~/.config/containers/systemd/
+# {{OPENHEARTH_HOME}} is replaced at install time.
 
 [Unit]
-Description=OpenClaw gateway (rootless Podman)
+Description=OpenHearth gateway (rootless Podman)
 
 [Container]
-Image=openclaw:local
-ContainerName=openclaw
+Image=openhearth:local
+ContainerName=openhearth
 UserNS=keep-id
-Volume={{OPENCLAW_HOME}}/.openclaw:/home/node/.openclaw
-EnvironmentFile={{OPENCLAW_HOME}}/.openclaw/.env
+Volume={{OPENHEARTH_HOME}}/.openhearth:/home/node/.openhearth
+EnvironmentFile={{OPENHEARTH_HOME}}/.openhearth/.env
 Environment=HOME=/home/node
 Environment=TERM=xterm-256color
 PublishPort=18789:18789

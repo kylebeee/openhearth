@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { OpenHearthConfig } from "../../config/config.js";
 import type { SandboxContext, SandboxWorkspaceInfo } from "./types.js";
 import { DEFAULT_BROWSER_EVALUATE_ENABLED } from "../../browser/constants.js";
 import { ensureBrowserControlAuth, resolveBrowserControlAuth } from "../../browser/control-auth.js";
@@ -18,7 +18,7 @@ import { resolveSandboxScopeKey, resolveSandboxWorkspaceDir } from "./shared.js"
 import { ensureSandboxWorkspace } from "./workspace.js";
 
 export async function resolveSandboxContext(params: {
-  config?: OpenClawConfig;
+  config?: OpenHearthConfig;
   sessionKey?: string;
   workspaceDir?: string;
 }): Promise<SandboxContext | null> {
@@ -124,7 +124,7 @@ export async function resolveSandboxContext(params: {
 }
 
 export async function ensureSandboxWorkspaceForSession(params: {
-  config?: OpenClawConfig;
+  config?: OpenHearthConfig;
   sessionKey?: string;
   workspaceDir?: string;
 }): Promise<SandboxWorkspaceInfo | null> {

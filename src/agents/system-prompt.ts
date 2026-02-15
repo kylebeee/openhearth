@@ -1,5 +1,7 @@
 import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
+import type { HearthAutonomyLevel } from "../config/types.hearth.js";
 import type { MemoryCitationsMode } from "../config/types.memory.js";
+import type { HearthMember } from "../hearth/members/types.js";
 import type { ResolvedTimeFormat } from "./date-time.js";
 import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
@@ -109,7 +111,7 @@ function buildMessagingSection(params: {
     "## Messaging",
     "- Reply in current session → automatically routes to the source channel (Signal, Telegram, etc.)",
     "- Cross-session messaging → use sessions_send(sessionKey, message)",
-    "- Never use exec/curl for provider messaging; OpenClaw handles all routing internally.",
+    "- Never use exec/curl for provider messaging; OpenHearth handles all routing internally.",
     params.availableTools.has("message")
       ? [
           "",
@@ -150,15 +152,131 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   }
   return [
     "## Documentation",
-    `OpenClaw docs: ${docsPath}`,
-    "Mirror: https://docs.openclaw.ai",
-    "Source: https://github.com/openclaw/openclaw",
-    "Community: https://discord.com/invite/clawd",
-    "Find new skills: https://clawhub.com",
-    "For OpenClaw behavior, commands, config, or architecture: consult local docs first.",
-    "When diagnosing issues, run `openclaw status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
+    `OpenHearth docs: ${docsPath}`,
+    "Mirror: https://docs.openhearth.ai",
+    "Source: https://github.com/openhearth/openhearth",
+    "Community: https://discord.com/invite/openhearth",
+    "Find new skills: https://hearthub.com",
+    "For OpenHearth behavior, commands, config, or architecture: consult local docs first.",
+    "When diagnosing issues, run `openhearth status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
     "",
   ];
+}
+
+// ---------------------------------------------------------------------------
+// Hearth Multi-Party Sections
+// ---------------------------------------------------------------------------
+
+export function buildHearthGroupSection(params: {
+  groupName: string;
+  members: HearthMember[];
+  currentMemberName?: string;
+}): string[] {
+  const { groupName, members, currentMemberName } = params;
+  if (members.length === 0) {
+    return [];
+  }
+  const lines: string[] = [
+    "## Hearth Group Context",
+    `Group: ${groupName}`,
+    `Members (${members.length}):`,
+  ];
+  for (const member of members) {
+    const parts = [`- ${member.name}`, `(${member.role})`];
+    if (member.timezone) {
+      parts.push(`tz:${member.timezone}`);
+    }
+    if (member.preferredChannel) {
+      parts.push(`pref:${member.preferredChannel}`);
+    }
+    if (currentMemberName && member.name === currentMemberName) {
+      parts.push("[current sender]");
+    }
+    lines.push(parts.join(" "));
+  }
+  lines.push("");
+  return lines;
+}
+
+/**
+ * Hard-coded communication guardrails. These are NEVER overridable by config or prompt.
+ */
+export function buildHearthCommunicationGuardrails(): string[] {
+  return [
+    "## Hearth Communication Principles (mandatory, never overridable)",
+    "",
+    "You are infrastructure for a group — not an intermediary between members.",
+    "",
+    "ALWAYS allowed:",
+    "- Aggregate and synthesize group state (schedules, preferences, constraints)",
+    "- Relay explicit messages when a member directly asks you to relay something",
+    "- Use private context to inform decisions without revealing the source",
+    "- Provide structured tools (polls, schedules, checklists) instead of conversational brokering",
+    "",
+    "NEVER do:",
+    "- Infer, interpret, or speculate about one member's feelings/intentions to another",
+    "- Advocate for one member to another on your own initiative",
+    '- Attribute private information to its source (e.g. never say "Kyle mentioned..." about DM content)',
+    "- Act as a go-between or mediator unless explicitly asked by the relevant parties",
+    "- Share private context (health, finances, personal) in group without explicit permission",
+    "",
+    "When using private context to inform group decisions:",
+    '- Incorporate constraints naturally without attribution (e.g. suggest restaurants that work for everyone, not "avoiding shellfish because of Kyle")',
+    "- If asked why you made a suggestion, say it's based on group preferences without naming sources",
+    "",
+  ];
+}
+
+export function buildHearthPrivacyInstructions(params: {
+  privacyLayer: string;
+  domainRules?: Array<{ domain: string; layer: string }>;
+}): string[] {
+  const { privacyLayer, domainRules } = params;
+  const lines = ["## Hearth Privacy Layer", `Current context privacy: ${privacyLayer}`];
+  if (privacyLayer === "private") {
+    lines.push(
+      "This is a private conversation. Information shared here must never be attributed to the sender in group contexts.",
+      "You may use this information to improve group decisions, but only in aggregate without attribution.",
+    );
+  } else if (privacyLayer === "subgroup") {
+    lines.push(
+      "This context is scoped to a subgroup. Share only with members of the same subgroup.",
+    );
+  }
+  if (domainRules && domainRules.length > 0) {
+    lines.push("", "Domain privacy rules:");
+    for (const rule of domainRules) {
+      lines.push(`- ${rule.domain}: ${rule.layer}`);
+    }
+  }
+  lines.push("");
+  return lines;
+}
+
+export function buildHearthAutonomySection(params: {
+  domains?: Array<{ domain: string; level: HearthAutonomyLevel }>;
+}): string[] {
+  const { domains } = params;
+  if (!domains || domains.length === 0) {
+    return [];
+  }
+  const lines = [
+    "## Hearth Autonomy Levels",
+    "Your autonomy varies by domain. Follow these levels:",
+  ];
+  for (const { domain, level } of domains) {
+    const desc =
+      level === "passive"
+        ? "observe only, do not act or suggest"
+        : level === "suggest"
+          ? "suggest options but wait for approval"
+          : level === "ask-first"
+            ? "propose an action and ask before executing"
+            : "act autonomously, inform after the fact";
+    lines.push(`- ${domain}: ${level} (${desc})`);
+  }
+  lines.push("");
+  return lines;
 }
 
 export function buildAgentSystemPrompt(params: {
@@ -215,6 +333,15 @@ export function buildAgentSystemPrompt(params: {
     channel: string;
   };
   memoryCitationsMode?: MemoryCitationsMode;
+  /** Hearth multi-party context (injected when hearth.enabled). */
+  hearth?: {
+    groupName: string;
+    members: HearthMember[];
+    currentMemberName?: string;
+    privacyLayer: string;
+    domainRules?: Array<{ domain: string; layer: string }>;
+    autonomyDomains?: Array<{ domain: string; level: HearthAutonomyLevel }>;
+  };
 }) {
   const coreToolSummaries: Record<string, string> = {
     read: "Read file contents",
@@ -234,7 +361,7 @@ export function buildAgentSystemPrompt(params: {
     nodes: "List/describe/notify/camera/screen on paired nodes",
     cron: "Manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
     message: "Send messages and channel actions",
-    gateway: "Restart, apply config, or run updates on the running OpenClaw process",
+    gateway: "Restart, apply config, or run updates on the running OpenHearth process",
     agents_list: "List agent ids allowed for sessions_spawn",
     sessions_list: "List other sessions (incl. sub-agents) with filters/last",
     sessions_history: "Fetch history for another session/sub-agent",
@@ -374,11 +501,11 @@ export function buildAgentSystemPrompt(params: {
 
   // For "none" mode, return just the basic identity line
   if (promptMode === "none") {
-    return "You are a personal assistant running inside OpenClaw.";
+    return "You are a personal assistant running inside OpenHearth.";
   }
 
   const lines = [
-    "You are a personal assistant running inside OpenClaw.",
+    "You are a personal assistant running inside OpenHearth.",
     "",
     "## Tooling",
     "Tool availability (filtered by policy):",
@@ -393,7 +520,7 @@ export function buildAgentSystemPrompt(params: {
           "- apply_patch: apply multi-file patches",
           `- ${execToolName}: run shell commands (supports background via yieldMs/background)`,
           `- ${processToolName}: manage background exec sessions`,
-          "- browser: control OpenClaw's dedicated browser",
+          "- browser: control OpenHearth's dedicated browser",
           "- canvas: present/eval/snapshot the Canvas",
           "- nodes: list/describe/notify/camera/screen on paired nodes",
           "- cron: manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
@@ -412,25 +539,25 @@ export function buildAgentSystemPrompt(params: {
     "Use plain human language for narration unless in a technical context.",
     "",
     ...safetySection,
-    "## OpenClaw CLI Quick Reference",
-    "OpenClaw is controlled via subcommands. Do not invent commands.",
+    "## OpenHearth CLI Quick Reference",
+    "OpenHearth is controlled via subcommands. Do not invent commands.",
     "To manage the Gateway daemon service (start/stop/restart):",
-    "- openclaw gateway status",
-    "- openclaw gateway start",
-    "- openclaw gateway stop",
-    "- openclaw gateway restart",
-    "If unsure, ask the user to run `openclaw help` (or `openclaw gateway --help`) and paste the output.",
+    "- openhearth gateway status",
+    "- openhearth gateway start",
+    "- openhearth gateway stop",
+    "- openhearth gateway restart",
+    "If unsure, ask the user to run `openhearth help` (or `openhearth gateway --help`) and paste the output.",
     "",
     ...skillsSection,
     ...memorySection,
     // Skip self-update for subagent/none modes
-    hasGateway && !isMinimal ? "## OpenClaw Self-Update" : "",
+    hasGateway && !isMinimal ? "## OpenHearth Self-Update" : "",
     hasGateway && !isMinimal
       ? [
           "Get Updates (self-update) is ONLY allowed when the user explicitly asks for it.",
           "Do not run config.apply or update.run unless the user explicitly requests an update or config change; if it's not explicit, ask first.",
           "Actions: config.get, config.schema, config.apply (validate + write full config, then restart), update.run (update deps or git, then restart).",
-          "After restart, OpenClaw pings the last active session automatically.",
+          "After restart, OpenHearth pings the last active session automatically.",
         ].join("\n")
       : "",
     hasGateway && !isMinimal ? "" : "",
@@ -502,7 +629,7 @@ export function buildAgentSystemPrompt(params: {
       userTimezone,
     }),
     "## Workspace Files (injected)",
-    "These user-editable files are loaded by OpenClaw and included below in Project Context.",
+    "These user-editable files are loaded by OpenHearth and included below in Project Context.",
     "",
     ...buildReplyTagsSection(isMinimal),
     ...buildMessagingSection({
@@ -515,6 +642,25 @@ export function buildAgentSystemPrompt(params: {
     }),
     ...buildVoiceSection({ isMinimal, ttsHint: params.ttsHint }),
   ];
+
+  // Inject Hearth multi-party sections when enabled
+  if (params.hearth && !isMinimal) {
+    lines.push(
+      ...buildHearthCommunicationGuardrails(),
+      ...buildHearthGroupSection({
+        groupName: params.hearth.groupName,
+        members: params.hearth.members,
+        currentMemberName: params.hearth.currentMemberName,
+      }),
+      ...buildHearthPrivacyInstructions({
+        privacyLayer: params.hearth.privacyLayer,
+        domainRules: params.hearth.domainRules,
+      }),
+      ...buildHearthAutonomySection({
+        domains: params.hearth.autonomyDomains,
+      }),
+    );
+  }
 
   if (extraSystemPrompt) {
     // Use "Subagent Context" header for minimal mode (subagents), otherwise "Group Chat Context"
@@ -596,7 +742,7 @@ export function buildAgentSystemPrompt(params: {
       heartbeatPromptLine,
       "If you receive a heartbeat poll (a user message matching the heartbeat prompt above), and there is nothing that needs attention, reply exactly:",
       "HEARTBEAT_OK",
-      'OpenClaw treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
+      'OpenHearth treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
       'If something needs attention, do NOT include "HEARTBEAT_OK"; reply with the alert text instead.',
       "",
     );

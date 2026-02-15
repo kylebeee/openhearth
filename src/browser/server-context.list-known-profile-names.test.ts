@@ -6,14 +6,14 @@ import { listKnownProfileNames } from "./server-context.js";
 describe("browser server-context listKnownProfileNames", () => {
   it("includes configured and runtime-only profile names", () => {
     const resolved = resolveBrowserConfig({
-      defaultProfile: "openclaw",
+      defaultProfile: "openhearth",
       profiles: {
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        openhearth: { cdpPort: 18800, color: "#FF4500" },
       },
     });
-    const openclaw = resolveProfile(resolved, "openclaw");
-    if (!openclaw) {
-      throw new Error("expected openclaw profile");
+    const openhearth = resolveProfile(resolved, "openhearth");
+    if (!openhearth) {
+      throw new Error("expected openhearth profile");
     }
 
     const state: BrowserServerState = {
@@ -24,7 +24,7 @@ describe("browser server-context listKnownProfileNames", () => {
         [
           "stale-removed",
           {
-            profile: { ...openclaw, name: "stale-removed" },
+            profile: { ...openhearth, name: "stale-removed" },
             running: null,
           },
         ],
@@ -33,7 +33,7 @@ describe("browser server-context listKnownProfileNames", () => {
 
     expect(listKnownProfileNames(state).toSorted()).toEqual([
       "chrome",
-      "openclaw",
+      "openhearth",
       "stale-removed",
     ]);
   });

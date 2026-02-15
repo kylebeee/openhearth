@@ -1,6 +1,6 @@
 import "./test-helpers.js";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import { monitorWebChannel } from "./auto-reply.js";
 import {
   installWebAutoReplyTestHomeHooks,
@@ -24,7 +24,7 @@ describe("broadcast groups", () => {
       broadcast: {
         "+1000": ["alfred", "missing"],
       },
-    } satisfies OpenClawConfig);
+    } satisfies OpenHearthConfig);
 
     const sendMedia = vi.fn();
     const reply = vi.fn().mockResolvedValue(undefined);

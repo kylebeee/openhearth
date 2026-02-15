@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
+import type { OpenHearthPluginApi } from "openhearth/plugin-sdk";
+import { emptyPluginConfigSchema } from "openhearth/plugin-sdk";
 import { createDiagnosticsOtelService } from "./src/service.js";
 
 const plugin = {
@@ -7,7 +7,7 @@ const plugin = {
   name: "Diagnostics OpenTelemetry",
   description: "Export diagnostics events to OpenTelemetry",
   configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
+  register(api: OpenHearthPluginApi) {
     api.registerService(createDiagnosticsOtelService());
   },
 };

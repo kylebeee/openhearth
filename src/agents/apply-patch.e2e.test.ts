@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { applyPatch } from "./apply-patch.js";
 
 async function withTempDir<T>(fn: (dir: string) => Promise<T>) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-patch-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-patch-"));
   try {
     return await fn(dir);
   } finally {
@@ -88,7 +88,7 @@ describe("applyPatch", () => {
 
   it("rejects absolute paths outside cwd", async () => {
     await withTempDir(async (dir) => {
-      const escapedPath = path.join(os.tmpdir(), `openclaw-apply-patch-${Date.now()}.txt`);
+      const escapedPath = path.join(os.tmpdir(), `openhearth-apply-patch-${Date.now()}.txt`);
 
       const patch = `*** Begin Patch
 *** Add File: ${escapedPath}

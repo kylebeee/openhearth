@@ -4,7 +4,7 @@ import { confirm, readConfigFileSnapshot } from "./doctor.e2e-harness.js";
 describe("doctor command", () => {
   it("runs legacy state migrations in non-interactive mode without prompting", async () => {
     readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/openhearth.json",
       exists: true,
       raw: "{}",
       parsed: {},

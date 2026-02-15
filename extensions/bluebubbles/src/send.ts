@@ -1,6 +1,6 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import type { OpenHearthConfig } from "openhearth/plugin-sdk";
 import crypto from "node:crypto";
-import { stripMarkdown } from "openclaw/plugin-sdk";
+import { stripMarkdown } from "openhearth/plugin-sdk";
 import { resolveBlueBubblesAccount } from "./accounts.js";
 import { getCachedBlueBubblesPrivateApiStatus } from "./probe.js";
 import {
@@ -19,7 +19,7 @@ export type BlueBubblesSendOpts = {
   password?: string;
   accountId?: string;
   timeoutMs?: number;
-  cfg?: OpenClawConfig;
+  cfg?: OpenHearthConfig;
   /** Message GUID to reply to (reply threading) */
   replyToMessageGuid?: string;
   /** Part index for reply (default: 0) */

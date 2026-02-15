@@ -37,7 +37,7 @@ vi.mock("../config/sessions.js", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../config/sessions.js")>();
   return {
     ...actual,
-    resolveStorePath: vi.fn(() => "/tmp/openclaw-sessions.json"),
+    resolveStorePath: vi.fn(() => "/tmp/openhearth-sessions.json"),
     updateLastRoute: (...args: unknown[]) => updateLastRouteMock(...args),
     resolveSessionKey: vi.fn(),
   };
@@ -60,10 +60,10 @@ const CATEGORY_GUILD_CFG = {
   agents: {
     defaults: {
       model: "anthropic/claude-opus-4-5",
-      workspace: "/tmp/openclaw",
+      workspace: "/tmp/openhearth",
     },
   },
-  session: { store: "/tmp/openclaw-sessions.json" },
+  session: { store: "/tmp/openhearth-sessions.json" },
   channels: {
     discord: {
       dm: { enabled: true, policy: "open" },
@@ -122,10 +122,10 @@ describe("discord tool result dispatch", () => {
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4-5",
-          workspace: "/tmp/openclaw",
+          workspace: "/tmp/openhearth",
         },
       },
-      session: { store: "/tmp/openclaw-sessions.json" },
+      session: { store: "/tmp/openhearth-sessions.json" },
       messages: { responsePrefix: "PFX" },
       channels: { discord: { dmPolicy: "open", allowFrom: ["*"], dm: { enabled: true } } },
     } as ReturnType<typeof import("../config/config.js").loadConfig>;
@@ -191,10 +191,10 @@ describe("discord tool result dispatch", () => {
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4-5",
-          workspace: "/tmp/openclaw",
+          workspace: "/tmp/openhearth",
         },
       },
-      session: { store: "/tmp/openclaw-sessions.json" },
+      session: { store: "/tmp/openhearth-sessions.json" },
       channels: { discord: { dm: { enabled: true, policy: "open" } } },
     } as ReturnType<typeof import("../config/config.js").loadConfig>;
 
@@ -270,10 +270,10 @@ describe("discord tool result dispatch", () => {
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4-5",
-          workspace: "/tmp/openclaw",
+          workspace: "/tmp/openhearth",
         },
       },
-      session: { store: "/tmp/openclaw-sessions.json" },
+      session: { store: "/tmp/openhearth-sessions.json" },
       channels: { discord: { dm: { enabled: true, policy: "open" } } },
     } as ReturnType<typeof import("../config/config.js").loadConfig>;
 
@@ -426,10 +426,10 @@ describe("discord tool result dispatch", () => {
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4-5",
-          workspace: "/tmp/openclaw",
+          workspace: "/tmp/openhearth",
         },
       },
-      session: { store: "/tmp/openclaw-sessions.json" },
+      session: { store: "/tmp/openhearth-sessions.json" },
       channels: {
         discord: { dm: { enabled: true, policy: "pairing", allowFrom: [] } },
       },

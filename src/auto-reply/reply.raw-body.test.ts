@@ -37,8 +37,8 @@ type HomeEnvSnapshot = {
   USERPROFILE: string | undefined;
   HOMEDRIVE: string | undefined;
   HOMEPATH: string | undefined;
-  OPENCLAW_STATE_DIR: string | undefined;
-  OPENCLAW_AGENT_DIR: string | undefined;
+  OPENHEARTH_STATE_DIR: string | undefined;
+  OPENHEARTH_AGENT_DIR: string | undefined;
   PI_CODING_AGENT_DIR: string | undefined;
 };
 
@@ -48,8 +48,8 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     USERPROFILE: process.env.USERPROFILE,
     HOMEDRIVE: process.env.HOMEDRIVE,
     HOMEPATH: process.env.HOMEPATH,
-    OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
-    OPENCLAW_AGENT_DIR: process.env.OPENCLAW_AGENT_DIR,
+    OPENHEARTH_STATE_DIR: process.env.OPENHEARTH_STATE_DIR,
+    OPENHEARTH_AGENT_DIR: process.env.OPENHEARTH_AGENT_DIR,
     PI_CODING_AGENT_DIR: process.env.PI_CODING_AGENT_DIR,
   };
 }
@@ -69,13 +69,13 @@ let caseId = 0;
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   const home = path.join(fixtureRoot, `case-${++caseId}`);
-  await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(home, ".openhearth", "agents", "main", "sessions"), { recursive: true });
   const envSnapshot = snapshotHomeEnv();
   process.env.HOME = home;
   process.env.USERPROFILE = home;
-  process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
-  process.env.OPENCLAW_AGENT_DIR = path.join(home, ".openclaw", "agent");
-  process.env.PI_CODING_AGENT_DIR = path.join(home, ".openclaw", "agent");
+  process.env.OPENHEARTH_STATE_DIR = path.join(home, ".openhearth");
+  process.env.OPENHEARTH_AGENT_DIR = path.join(home, ".openhearth", "agent");
+  process.env.PI_CODING_AGENT_DIR = path.join(home, ".openhearth", "agent");
 
   if (process.platform === "win32") {
     const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -94,7 +94,7 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
 
 describe("RawBody directive parsing", () => {
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-rawbody-"));
   });
 
   afterAll(async () => {
@@ -102,7 +102,7 @@ describe("RawBody directive parsing", () => {
   });
 
   beforeEach(() => {
-    vi.stubEnv("OPENCLAW_TEST_FAST", "1");
+    vi.stubEnv("OPENHEARTH_TEST_FAST", "1");
     agentMocks.runEmbeddedPiAgent.mockReset();
     agentMocks.loadModelCatalog.mockReset();
     agentMocks.loadModelCatalog.mockResolvedValue([
@@ -145,7 +145,7 @@ describe("RawBody directive parsing", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "openhearth"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },

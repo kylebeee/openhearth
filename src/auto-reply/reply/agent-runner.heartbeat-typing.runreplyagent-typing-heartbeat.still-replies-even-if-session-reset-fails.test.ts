@@ -14,9 +14,9 @@ describe("runReplyAgent typing (heartbeat)", () => {
   installRunReplyAgentTypingHeartbeatTestHooks();
 
   it("still replies even if session reset fails to persist", async () => {
-    const prevStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-session-reset-fail-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const prevStateDir = process.env.OPENHEARTH_STATE_DIR;
+    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openhearth-session-reset-fail-"));
+    process.env.OPENHEARTH_STATE_DIR = stateDir;
     const saveSpy = vi.spyOn(sessions, "saveSessionStore").mockRejectedValueOnce(new Error("boom"));
     try {
       const sessionId = "session-corrupt";
@@ -50,9 +50,9 @@ describe("runReplyAgent typing (heartbeat)", () => {
     } finally {
       saveSpy.mockRestore();
       if (prevStateDir) {
-        process.env.OPENCLAW_STATE_DIR = prevStateDir;
+        process.env.OPENHEARTH_STATE_DIR = prevStateDir;
       } else {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.OPENHEARTH_STATE_DIR;
       }
     }
   });

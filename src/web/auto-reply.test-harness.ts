@@ -63,7 +63,7 @@ export function installWebAutoReplyTestHomeHooks() {
   beforeEach(async () => {
     resetInboundDedupe();
     previousHome = process.env.HOME;
-    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-web-home-"));
+    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-web-home-"));
     process.env.HOME = tempHome;
   });
 
@@ -79,7 +79,7 @@ export function installWebAutoReplyTestHomeHooks() {
 export async function makeSessionStore(
   entries: Record<string, unknown> = {},
 ): Promise<{ storePath: string; cleanup: () => Promise<void> }> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-session-"));
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(storePath, JSON.stringify(entries));
   const cleanup = async () => {

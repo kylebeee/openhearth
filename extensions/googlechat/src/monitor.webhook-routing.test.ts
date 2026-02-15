@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig, PluginRuntime } from "openclaw/plugin-sdk";
+import type { OpenHearthConfig, PluginRuntime } from "openhearth/plugin-sdk";
 import { EventEmitter } from "node:events";
 import { describe, expect, it, vi } from "vitest";
 import type { ResolvedGoogleChatAccount } from "./accounts.js";
@@ -70,7 +70,7 @@ describe("Google Chat webhook routing", () => {
     const sinkA = vi.fn();
     const sinkB = vi.fn();
     const core = {} as PluginRuntime;
-    const config = {} as OpenClawConfig;
+    const config = {} as OpenHearthConfig;
 
     const unregisterA = registerGoogleChatWebhookTarget({
       account: baseAccount("A"),
@@ -119,7 +119,7 @@ describe("Google Chat webhook routing", () => {
     const sinkA = vi.fn();
     const sinkB = vi.fn();
     const core = {} as PluginRuntime;
-    const config = {} as OpenClawConfig;
+    const config = {} as OpenHearthConfig;
 
     const unregisterA = registerGoogleChatWebhookTarget({
       account: baseAccount("A"),

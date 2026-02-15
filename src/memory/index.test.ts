@@ -49,7 +49,7 @@ describe("memory index", () => {
   let manager: MemoryIndexManager | null = null;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mem-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-mem-fixtures-"));
   });
 
   afterAll(async () => {
@@ -59,7 +59,7 @@ describe("memory index", () => {
   beforeEach(async () => {
     // Perf: most suites don't need atomic swap behavior for full reindexes.
     // Keep atomic reindex tests on the safe path.
-    vi.stubEnv("OPENCLAW_TEST_MEMORY_UNSAFE_REINDEX", "1");
+    vi.stubEnv("OPENHEARTH_TEST_MEMORY_UNSAFE_REINDEX", "1");
     embedBatchCalls = 0;
     workspaceDir = path.join(fixtureRoot, `case-${fixtureCount++}`);
     await fs.mkdir(workspaceDir, { recursive: true });

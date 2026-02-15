@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw channels` (accounts, status, login/logout, logs)"
+summary: "CLI reference for `openhearth channels` (accounts, status, login/logout, logs)"
 read_when:
   - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage)
   - You want to check channel status or tail channel logs
 title: "channels"
 ---
 
-# `openclaw channels`
+# `openhearth channels`
 
 Manage chat channel accounts and their runtime status on the Gateway.
 
@@ -18,43 +18,43 @@ Related docs:
 ## Common commands
 
 ```bash
-openclaw channels list
-openclaw channels status
-openclaw channels capabilities
-openclaw channels capabilities --channel discord --target channel:123
-openclaw channels resolve --channel slack "#general" "@jane"
-openclaw channels logs --channel all
+openhearth channels list
+openhearth channels status
+openhearth channels capabilities
+openhearth channels capabilities --channel discord --target channel:123
+openhearth channels resolve --channel slack "#general" "@jane"
+openhearth channels logs --channel all
 ```
 
 ## Add / remove accounts
 
 ```bash
-openclaw channels add --channel telegram --token <bot-token>
-openclaw channels remove --channel telegram --delete
+openhearth channels add --channel telegram --token <bot-token>
+openhearth channels remove --channel telegram --delete
 ```
 
-Tip: `openclaw channels add --help` shows per-channel flags (token, app token, signal-cli paths, etc).
+Tip: `openhearth channels add --help` shows per-channel flags (token, app token, signal-cli paths, etc).
 
 ## Login / logout (interactive)
 
 ```bash
-openclaw channels login --channel whatsapp
-openclaw channels logout --channel whatsapp
+openhearth channels login --channel whatsapp
+openhearth channels logout --channel whatsapp
 ```
 
 ## Troubleshooting
 
-- Run `openclaw status --deep` for a broad probe.
-- Use `openclaw doctor` for guided fixes.
-- `openclaw channels list` prints `Claude: HTTP 403 ... user:profile` → usage snapshot needs the `user:profile` scope. Use `--no-usage`, or provide a claude.ai session key (`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`), or re-auth via Claude Code CLI.
+- Run `openhearth status --deep` for a broad probe.
+- Use `openhearth doctor` for guided fixes.
+- `openhearth channels list` prints `Claude: HTTP 403 ... user:profile` → usage snapshot needs the `user:profile` scope. Use `--no-usage`, or provide a claude.ai session key (`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`), or re-auth via Claude Code CLI.
 
 ## Capabilities probe
 
 Fetch provider capability hints (intents/scopes where available) plus static feature support:
 
 ```bash
-openclaw channels capabilities
-openclaw channels capabilities --channel discord --target channel:123
+openhearth channels capabilities
+openhearth channels capabilities --channel discord --target channel:123
 ```
 
 Notes:
@@ -68,9 +68,9 @@ Notes:
 Resolve channel/user names to IDs using the provider directory:
 
 ```bash
-openclaw channels resolve --channel slack "#general" "@jane"
-openclaw channels resolve --channel discord "My Server/#support" "@someone"
-openclaw channels resolve --channel matrix "Project Room"
+openhearth channels resolve --channel slack "#general" "@jane"
+openhearth channels resolve --channel discord "My Server/#support" "@someone"
+openhearth channels resolve --channel matrix "Project Room"
 ```
 
 Notes:

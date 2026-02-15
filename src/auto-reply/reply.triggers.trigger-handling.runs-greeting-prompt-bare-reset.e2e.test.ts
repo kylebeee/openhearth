@@ -37,7 +37,7 @@ describe("trigger handling", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: join(home, "openclaw"),
+              workspace: join(home, "openhearth"),
             },
           },
           channels: {
@@ -46,7 +46,7 @@ describe("trigger handling", () => {
             },
           },
           session: {
-            store: join(tmpdir(), `openclaw-session-test-${Date.now()}.json`),
+            store: join(tmpdir(), `openhearth-session-test-${Date.now()}.json`),
           },
         },
       );
@@ -71,7 +71,7 @@ describe("trigger handling", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: join(home, "openclaw"),
+              workspace: join(home, "openhearth"),
             },
           },
           channels: {
@@ -80,7 +80,7 @@ describe("trigger handling", () => {
             },
           },
           session: {
-            store: join(tmpdir(), `openclaw-session-test-${Date.now()}.json`),
+            store: join(tmpdir(), `openhearth-session-test-${Date.now()}.json`),
           },
         },
       );
@@ -102,7 +102,7 @@ describe("trigger handling", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: join(home, "openclaw"),
+              workspace: join(home, "openhearth"),
             },
           },
           channels: {
@@ -111,7 +111,7 @@ describe("trigger handling", () => {
             },
           },
           session: {
-            store: join(tmpdir(), `openclaw-session-test-${Date.now()}.json`),
+            store: join(tmpdir(), `openhearth-session-test-${Date.now()}.json`),
           },
         },
       );

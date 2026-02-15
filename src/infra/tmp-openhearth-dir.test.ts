@@ -1,9 +1,12 @@
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { POSIX_OPENCLAW_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./tmp-openclaw-dir.js";
+import {
+  POSIX_OPENHEARTH_TMP_DIR,
+  resolvePreferredOpenHearthTmpDir,
+} from "./tmp-openhearth-dir.js";
 
-describe("resolvePreferredOpenClawTmpDir", () => {
-  it("prefers /tmp/openclaw when it already exists and is writable", () => {
+describe("resolvePreferredOpenHearthTmpDir", () => {
+  it("prefers /tmp/openhearth when it already exists and is writable", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => ({
       isDirectory: () => true,
@@ -15,7 +18,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -25,11 +28,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
 
     expect(lstatSync).toHaveBeenCalledTimes(1);
     expect(accessSync).toHaveBeenCalledTimes(1);
-    expect(resolved).toBe(POSIX_OPENCLAW_TMP_DIR);
+    expect(resolved).toBe(POSIX_OPENHEARTH_TMP_DIR);
     expect(tmpdir).not.toHaveBeenCalled();
   });
 
-  it("prefers /tmp/openclaw when it does not exist but /tmp is writable", () => {
+  it("prefers /tmp/openhearth when it does not exist but /tmp is writable", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => {
       const err = new Error("missing") as Error & { code?: string };
@@ -53,7 +56,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       mode: 0o40700,
     }));
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -61,13 +64,13 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(POSIX_OPENCLAW_TMP_DIR);
+    expect(resolved).toBe(POSIX_OPENHEARTH_TMP_DIR);
     expect(accessSync).toHaveBeenCalledWith("/tmp", expect.any(Number));
-    expect(mkdirSync).toHaveBeenCalledWith(POSIX_OPENCLAW_TMP_DIR, expect.any(Object));
+    expect(mkdirSync).toHaveBeenCalledWith(POSIX_OPENHEARTH_TMP_DIR, expect.any(Object));
     expect(tmpdir).not.toHaveBeenCalled();
   });
 
-  it("falls back to os.tmpdir()/openclaw when /tmp/openclaw is not a directory", () => {
+  it("falls back to os.tmpdir()/openhearth when /tmp/openhearth is not a directory", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => ({
       isDirectory: () => false,
@@ -79,7 +82,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -87,11 +90,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(path.join("/var/fallback", "openclaw-501"));
+    expect(resolved).toBe(path.join("/var/fallback", "openhearth-501"));
     expect(tmpdir).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back to os.tmpdir()/openclaw when /tmp is not writable", () => {
+  it("falls back to os.tmpdir()/openhearth when /tmp is not writable", () => {
     const accessSync = vi.fn((target: string) => {
       if (target === "/tmp") {
         throw new Error("read-only");
@@ -106,7 +109,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -114,11 +117,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(path.join("/var/fallback", "openclaw-501"));
+    expect(resolved).toBe(path.join("/var/fallback", "openhearth-501"));
     expect(tmpdir).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back when /tmp/openclaw is a symlink", () => {
+  it("falls back when /tmp/openhearth is a symlink", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => ({
       isDirectory: () => true,
@@ -130,7 +133,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -138,11 +141,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(path.join("/var/fallback", "openclaw-501"));
+    expect(resolved).toBe(path.join("/var/fallback", "openhearth-501"));
     expect(tmpdir).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back when /tmp/openclaw is not owned by the current user", () => {
+  it("falls back when /tmp/openhearth is not owned by the current user", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => ({
       isDirectory: () => true,
@@ -154,7 +157,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -162,11 +165,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(path.join("/var/fallback", "openclaw-501"));
+    expect(resolved).toBe(path.join("/var/fallback", "openhearth-501"));
     expect(tmpdir).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back when /tmp/openclaw is group/other writable", () => {
+  it("falls back when /tmp/openhearth is group/other writable", () => {
     const accessSync = vi.fn();
     const lstatSync = vi.fn(() => ({
       isDirectory: () => true,
@@ -178,7 +181,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const getuid = vi.fn(() => 501);
     const tmpdir = vi.fn(() => "/var/fallback");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredOpenHearthTmpDir({
       accessSync,
       lstatSync,
       mkdirSync,
@@ -186,7 +189,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       tmpdir,
     });
 
-    expect(resolved).toBe(path.join("/var/fallback", "openclaw-501"));
+    expect(resolved).toBe(path.join("/var/fallback", "openhearth-501"));
     expect(tmpdir).toHaveBeenCalledTimes(1);
   });
 });

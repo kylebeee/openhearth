@@ -18,7 +18,7 @@ function snapshotHomeEnv(): HomeEnvSnapshot {
     userProfile: process.env.USERPROFILE,
     homeDrive: process.env.HOMEDRIVE,
     homePath: process.env.HOMEPATH,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
+    stateDir: process.env.OPENHEARTH_STATE_DIR,
   };
 }
 
@@ -34,7 +34,7 @@ function restoreHomeEnv(snapshot: HomeEnvSnapshot) {
   restoreKey("USERPROFILE", snapshot.userProfile);
   restoreKey("HOMEDRIVE", snapshot.homeDrive);
   restoreKey("HOMEPATH", snapshot.homePath);
-  restoreKey("OPENCLAW_STATE_DIR", snapshot.stateDir);
+  restoreKey("OPENHEARTH_STATE_DIR", snapshot.stateDir);
 }
 
 describe("config io write", () => {
@@ -46,7 +46,7 @@ describe("config io write", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-config-io-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-config-io-"));
   });
 
   afterAll(async () => {
@@ -55,12 +55,12 @@ describe("config io write", () => {
 
   const withTempHome = async <T>(fn: (home: string) => Promise<T>): Promise<T> => {
     const home = path.join(fixtureRoot, `home-${fixtureCount++}`);
-    await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(home, ".openhearth"), { recursive: true });
 
     const snapshot = snapshotHomeEnv();
     process.env.HOME = home;
     process.env.USERPROFILE = home;
-    process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
+    process.env.OPENHEARTH_STATE_DIR = path.join(home, ".openhearth");
 
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -79,7 +79,7 @@ describe("config io write", () => {
 
   it("persists caller changes onto resolved config without leaking runtime defaults", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -120,7 +120,7 @@ describe("config io write", () => {
 
   it("preserves env var references when writing", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -179,7 +179,7 @@ describe("config io write", () => {
 
   it("keeps env refs in arrays when appending entries", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -252,7 +252,7 @@ describe("config io write", () => {
 
   it("logs an overwrite audit entry when replacing an existing config file", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -314,8 +314,8 @@ describe("config io write", () => {
 
   it("appends config write audit JSONL entries with forensic metadata", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
-      const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
+      const auditPath = path.join(home, ".openhearth", "logs", "config-audit.jsonl");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -359,8 +359,8 @@ describe("config io write", () => {
 
   it("records gateway watch session markers in config audit entries", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
-      const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+      const configPath = path.join(home, ".openhearth", "openhearth.json");
+      const auditPath = path.join(home, ".openhearth", "logs", "config-audit.jsonl");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,
@@ -370,9 +370,9 @@ describe("config io write", () => {
 
       const io = createConfigIO({
         env: {
-          OPENCLAW_WATCH_MODE: "1",
-          OPENCLAW_WATCH_SESSION: "watch-session-1",
-          OPENCLAW_WATCH_COMMAND: "gateway --force",
+          OPENHEARTH_WATCH_MODE: "1",
+          OPENHEARTH_WATCH_SESSION: "watch-session-1",
+          OPENHEARTH_WATCH_COMMAND: "gateway --force",
         } as NodeJS.ProcessEnv,
         homedir: () => home,
         logger: {

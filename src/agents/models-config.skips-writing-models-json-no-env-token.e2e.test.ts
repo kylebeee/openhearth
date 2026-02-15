@@ -1,16 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { OpenHearthConfig } from "../config/config.js";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
-import { resolveOpenClawAgentDir } from "./agent-paths.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { resolveOpenHearthAgentDir } from "./agent-paths.js";
+import { ensureOpenHearthModelsJson } from "./models-config.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-models-" });
+  return withTempHomeBase(fn, { prefix: "openhearth-models-" });
 }
 
-const MODELS_CONFIG: OpenClawConfig = {
+const MODELS_CONFIG: OpenHearthConfig = {
   models: {
     providers: {
       "custom-proxy": {
@@ -71,7 +71,7 @@ describe("models-config", () => {
       const previousAwsDefaultRegion = process.env.AWS_DEFAULT_REGION;
       const previousAwsSharedCredentials = process.env.AWS_SHARED_CREDENTIALS_FILE;
       const previousAwsConfigFile = process.env.AWS_CONFIG_FILE;
-      const previousAgentDir = process.env.OPENCLAW_AGENT_DIR;
+      const previousAgentDir = process.env.OPENHEARTH_AGENT_DIR;
       const previousPiAgentDir = process.env.PI_CODING_AGENT_DIR;
       delete process.env.COPILOT_GITHUB_TOKEN;
       delete process.env.GH_TOKEN;
@@ -97,15 +97,15 @@ describe("models-config", () => {
       delete process.env.AWS_DEFAULT_REGION;
       delete process.env.AWS_SHARED_CREDENTIALS_FILE;
       delete process.env.AWS_CONFIG_FILE;
-      delete process.env.OPENCLAW_AGENT_DIR;
+      delete process.env.OPENHEARTH_AGENT_DIR;
       delete process.env.PI_CODING_AGENT_DIR;
 
       try {
         const agentDir = path.join(home, "agent-empty");
-        // Avoid merging in the user's real main auth store via OPENCLAW_AGENT_DIR.
-        process.env.OPENCLAW_AGENT_DIR = agentDir;
+        // Avoid merging in the user's real main auth store via OPENHEARTH_AGENT_DIR.
+        process.env.OPENHEARTH_AGENT_DIR = agentDir;
         process.env.PI_CODING_AGENT_DIR = agentDir;
-        const result = await ensureOpenClawModelsJson(
+        const result = await ensureOpenHearthModelsJson(
           {
             models: { providers: {} },
           },
@@ -236,9 +236,9 @@ describe("models-config", () => {
           process.env.AWS_CONFIG_FILE = previousAwsConfigFile;
         }
         if (previousAgentDir === undefined) {
-          delete process.env.OPENCLAW_AGENT_DIR;
+          delete process.env.OPENHEARTH_AGENT_DIR;
         } else {
-          process.env.OPENCLAW_AGENT_DIR = previousAgentDir;
+          process.env.OPENHEARTH_AGENT_DIR = previousAgentDir;
         }
         if (previousPiAgentDir === undefined) {
           delete process.env.PI_CODING_AGENT_DIR;
@@ -250,9 +250,9 @@ describe("models-config", () => {
   });
   it("writes models.json for configured providers", async () => {
     await withTempHome(async () => {
-      await ensureOpenClawModelsJson(MODELS_CONFIG);
+      await ensureOpenHearthModelsJson(MODELS_CONFIG);
 
-      const modelPath = path.join(resolveOpenClawAgentDir(), "models.json");
+      const modelPath = path.join(resolveOpenHearthAgentDir(), "models.json");
       const raw = await fs.readFile(modelPath, "utf8");
       const parsed = JSON.parse(raw) as {
         providers: Record<string, { baseUrl?: string }>;
@@ -266,9 +266,9 @@ describe("models-config", () => {
       const prevKey = process.env.MINIMAX_API_KEY;
       process.env.MINIMAX_API_KEY = "sk-minimax-test";
       try {
-        await ensureOpenClawModelsJson({});
+        await ensureOpenHearthModelsJson({});
 
-        const modelPath = path.join(resolveOpenClawAgentDir(), "models.json");
+        const modelPath = path.join(resolveOpenHearthAgentDir(), "models.json");
         const raw = await fs.readFile(modelPath, "utf8");
         const parsed = JSON.parse(raw) as {
           providers: Record<
@@ -299,9 +299,9 @@ describe("models-config", () => {
       const prevKey = process.env.SYNTHETIC_API_KEY;
       process.env.SYNTHETIC_API_KEY = "sk-synthetic-test";
       try {
-        await ensureOpenClawModelsJson({});
+        await ensureOpenHearthModelsJson({});
 
-        const modelPath = path.join(resolveOpenClawAgentDir(), "models.json");
+        const modelPath = path.join(resolveOpenHearthAgentDir(), "models.json");
         const raw = await fs.readFile(modelPath, "utf8");
         const parsed = JSON.parse(raw) as {
           providers: Record<

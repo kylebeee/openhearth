@@ -265,7 +265,7 @@ describe("web auto-reply", () => {
       return { close: vi.fn() };
     };
 
-    const authDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-wa-auth-"));
+    const authDir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-wa-auth-"));
 
     try {
       await fs.writeFile(
@@ -343,7 +343,7 @@ describe("web auto-reply", () => {
       return { close: vi.fn() };
     };
 
-    const authDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-wa-auth-"));
+    const authDir = await fs.mkdtemp(path.join(os.tmpdir(), "openhearth-wa-auth-"));
 
     try {
       await fs.writeFile(

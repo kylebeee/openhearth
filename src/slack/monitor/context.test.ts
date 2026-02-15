@@ -1,11 +1,11 @@
 import type { App } from "@slack/bolt";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { OpenHearthConfig } from "../../config/config.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import { createSlackMonitorContext, normalizeSlackChannelType } from "./context.js";
 
 const baseParams = () => ({
-  cfg: {} as OpenClawConfig,
+  cfg: {} as OpenHearthConfig,
   accountId: "default",
   botToken: "token",
   app: { client: {} } as App,
@@ -29,7 +29,7 @@ const baseParams = () => ({
   replyToMode: "off" as const,
   slashCommand: {
     enabled: false,
-    name: "openclaw",
+    name: "openhearth",
     sessionPrefix: "slack:slash",
     ephemeral: true,
   },
