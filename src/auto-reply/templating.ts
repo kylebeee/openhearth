@@ -142,18 +142,18 @@ export type MsgContext = {
    */
   HookMessages?: string[];
 
-  // -- Hive multi-party fields --
+  // -- Hearth multi-party fields --
 
-  /** Resolved Hive member id for the sender. */
-  HiveMemberId?: string;
-  /** Resolved Hive member display name. */
-  HiveMemberName?: string;
-  /** Resolved Hive member role (owner | admin | member | guest). */
-  HiveMemberRole?: string;
-  /** Hive group key for the current session. */
-  HiveGroupId?: string;
+  /** Resolved Hearth member id for the sender. */
+  HearthMemberId?: string;
+  /** Resolved Hearth member display name. */
+  HearthMemberName?: string;
+  /** Resolved Hearth member role (owner | admin | member | guest). */
+  HearthMemberRole?: string;
+  /** Hearth group key for the current session. */
+  HearthGroupId?: string;
   /** Privacy layer for the current message context (public | subgroup | private | agent-inferred). */
-  HivePrivacyLayer?: string;
+  HearthPrivacyLayer?: string;
 };
 
 export type FinalizedMsgContext = Omit<MsgContext, "CommandAuthorized"> & {

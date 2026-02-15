@@ -1,7 +1,7 @@
 ---
-summary: "Hive member model: identities, roles, resolution, and cross-channel linking"
+summary: "Hearth member model: identities, roles, resolution, and cross-channel linking"
 read_when:
-  - Adding or changing Hive group members
+  - Adding or changing Hearth group members
   - Understanding how sender resolution works
   - Linking a member across multiple channels
 title: "Members"
@@ -9,7 +9,7 @@ title: "Members"
 
 # Members
 
-Hive's member model gives the agent persistent identity for every person in a group. Members are defined in config and synced to a SQLite registry at `~/.openclaw/hive/members.db`.
+Hearth's member model gives the agent persistent identity for every person in a group. Members are defined in config and synced to a SQLite registry at `~/.openclaw/hearth/members.db`.
 
 ## Member fields
 
@@ -59,7 +59,7 @@ Roles are informational in Phase 1. The agent sees them in the system prompt and
 
 ## Member resolution
 
-When a message arrives, Hive resolves the sender to a `HiveMember` using this strategy:
+When a message arrives, Hearth resolves the sender to a `HearthMember` using this strategy:
 
 1. **Channel + sender id** — match `Provider` + `SenderId`/`From` against identity `channel` + `id`
 2. **Channel + username** — match against identity `username`
@@ -70,17 +70,17 @@ Resolution is case-insensitive. The first match wins.
 
 Once resolved, the following fields are set on the message context:
 
-- `HiveMemberId` — the member's stable id
-- `HiveMemberName` — display name
-- `HiveMemberRole` — role string
-- `HiveGroupId` — the group key
-- `HivePrivacyLayer` — privacy classification for this message
+- `HearthMemberId` — the member's stable id
+- `HearthMemberName` — display name
+- `HearthMemberRole` — role string
+- `HearthGroupId` — the group key
+- `HearthPrivacyLayer` — privacy classification for this message
 
-These are available in templates via `{{HiveMemberId}}`, `{{HiveMemberName}}`, etc.
+These are available in templates via `{{HearthMemberId}}`, `{{HearthMemberName}}`, etc.
 
 ## Registry
 
-Members defined in config are synced to an SQLite database at `~/.openclaw/hive/members.db` on startup. The sync is idempotent — reloading config updates existing members rather than creating duplicates. The primary identity (first in the list) is used as the stable key for matching.
+Members defined in config are synced to an SQLite database at `~/.openclaw/hearth/members.db` on startup. The sync is idempotent — reloading config updates existing members rather than creating duplicates. The primary identity (first in the list) is used as the stable key for matching.
 
 The registry supports:
 
@@ -94,7 +94,7 @@ The registry supports:
 
 ```json5
 {
-  hive: {
+  hearth: {
     enabled: true,
     groups: {
       "telegram:group:-1001234567890": {
@@ -128,10 +128,10 @@ The registry supports:
 
 ## System prompt
 
-When Hive is enabled and a member is resolved, the system prompt includes a group roster:
+When Hearth is enabled and a member is resolved, the system prompt includes a group roster:
 
 ```
-## Hive Group Context
+## Hearth Group Context
 Group: Roommates
 Members (2):
 - Alex (owner) tz:America/Los_Angeles pref:telegram [current sender]
@@ -142,6 +142,6 @@ The `[current sender]` tag tells the agent which member sent the current message
 
 ## Related
 
-- [Privacy](/hive/privacy) — how member context is scoped
-- [Tools](/hive/tools) — `hive_members` and `hive_member_info` tools
-- [Configuration](/hive/configuration) — full config reference
+- [Privacy](/hearth/privacy) — how member context is scoped
+- [Tools](/hearth/tools) — `hearth_members` and `hearth_member_info` tools
+- [Configuration](/hearth/configuration) — full config reference

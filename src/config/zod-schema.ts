@@ -3,7 +3,7 @@ import { ToolsSchema } from "./zod-schema.agent-runtime.js";
 import { AgentsSchema, AudioSchema, BindingsSchema, BroadcastSchema } from "./zod-schema.agents.js";
 import { ApprovalsSchema } from "./zod-schema.approvals.js";
 import { HexColorSchema, ModelsConfigSchema } from "./zod-schema.core.js";
-import { HiveSchema } from "./zod-schema.hive.js";
+import { HearthSchema } from "./zod-schema.hearth.js";
 import { HookMappingSchema, HooksGmailSchema, InternalHooksSchema } from "./zod-schema.hooks.js";
 import { ChannelsSchema } from "./zod-schema.providers.js";
 import { sensitive } from "./zod-schema.sensitive.js";
@@ -550,7 +550,7 @@ export const OpenClawSchema = z
       .strict()
       .optional(),
     memory: MemorySchema,
-    hive: HiveSchema,
+    hearth: HearthSchema,
     skills: z
       .object({
         allowBundled: z.array(z.string()).optional(),

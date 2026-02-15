@@ -11,7 +11,7 @@ import type {
   GatewayConfig,
   TalkConfig,
 } from "./types.gateway.js";
-import type { HiveConfig } from "./types.hive.js";
+import type { HearthConfig } from "./types.hearth.js";
 import type { HooksConfig } from "./types.hooks.js";
 import type { MemoryConfig } from "./types.memory.js";
 import type {
@@ -98,7 +98,7 @@ export type OpenClawConfig = {
   talk?: TalkConfig;
   gateway?: GatewayConfig;
   memory?: MemoryConfig;
-  hive?: HiveConfig;
+  hearth?: HearthConfig;
 };
 
 export type ConfigValidationIssue = {

@@ -2,13 +2,13 @@ import type { DatabaseSync } from "node:sqlite";
 import { randomUUID } from "node:crypto";
 import fsSync from "node:fs";
 import path from "node:path";
-import type { HiveMember, HiveSubgroup, MemberChannelIdentity, MemberRole } from "./types.js";
+import type { HearthMember, HearthSubgroup, MemberChannelIdentity, MemberRole } from "./types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { requireNodeSqlite } from "../../memory/sqlite.js";
 
-const log = createSubsystemLogger("hive");
+const log = createSubsystemLogger("hearth");
 
-function ensureHiveMemberSchema(db: DatabaseSync): void {
+function ensureHearthMemberSchema(db: DatabaseSync): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS members (
       member_id TEXT PRIMARY KEY,
@@ -54,23 +54,23 @@ function ensureHiveMemberSchema(db: DatabaseSync): void {
   `);
 }
 
-export class HiveMemberRegistry {
+export class HearthMemberRegistry {
   private db: DatabaseSync;
   private readonly dbPath: string;
 
   constructor(stateDir: string) {
-    const hiveDir = path.join(stateDir, "hive");
+    const hiveDir = path.join(stateDir, "hearth");
     if (!fsSync.existsSync(hiveDir)) {
       fsSync.mkdirSync(hiveDir, { recursive: true });
     }
     this.dbPath = path.join(hiveDir, "members.db");
     const { DatabaseSync } = requireNodeSqlite();
     this.db = new DatabaseSync(this.dbPath);
-    ensureHiveMemberSchema(this.db);
-    log.info(`Hive member registry initialized at ${this.dbPath}`);
+    ensureHearthMemberSchema(this.db);
+    log.info(`Hearth member registry initialized at ${this.dbPath}`);
   }
 
-  upsertMember(member: HiveMember): void {
+  upsertMember(member: HearthMember): void {
     const now = Date.now();
     const existing = this.db
       .prepare("SELECT member_id FROM members WHERE member_id = ?")
@@ -123,7 +123,7 @@ export class HiveMemberRegistry {
     }
   }
 
-  getMember(memberId: string): HiveMember | undefined {
+  getMember(memberId: string): HearthMember | undefined {
     const row = this.db.prepare("SELECT * FROM members WHERE member_id = ?").get(memberId) as
       | {
           member_id: string;
@@ -149,7 +149,7 @@ export class HiveMemberRegistry {
     };
   }
 
-  getAllMembers(): HiveMember[] {
+  getAllMembers(): HearthMember[] {
     const rows = this.db.prepare("SELECT * FROM members ORDER BY name").all() as Array<{
       member_id: string;
       name: string;
@@ -173,7 +173,7 @@ export class HiveMemberRegistry {
    * Resolve a member by channel identity (channel + id).
    * Returns undefined if no match found.
    */
-  resolveByChannelIdentity(channel: string, channelId: string): HiveMember | undefined {
+  resolveByChannelIdentity(channel: string, channelId: string): HearthMember | undefined {
     const row = this.db
       .prepare("SELECT member_id FROM member_identities WHERE channel = ? AND channel_id = ?")
       .get(channel.toLowerCase(), channelId.toLowerCase()) as { member_id: string } | undefined;
@@ -191,7 +191,7 @@ export class HiveMemberRegistry {
 
   // -- Subgroup operations --
 
-  createSubgroup(groupKey: string, name: string, memberIds: string[]): HiveSubgroup {
+  createSubgroup(groupKey: string, name: string, memberIds: string[]): HearthSubgroup {
     const subgroupId = randomUUID();
     const now = Date.now();
     this.db
@@ -208,7 +208,7 @@ export class HiveMemberRegistry {
     return { subgroupId, name, memberIds, createdAt: now };
   }
 
-  getSubgroups(groupKey: string): HiveSubgroup[] {
+  getSubgroups(groupKey: string): HearthSubgroup[] {
     const rows = this.db
       .prepare("SELECT * FROM subgroups WHERE group_key = ? ORDER BY created_at")
       .all(groupKey) as Array<{
@@ -258,12 +258,12 @@ export class HiveMemberRegistry {
 }
 
 /**
- * Sync Hive members from config into the registry.
+ * Sync Hearth members from config into the registry.
  * Upserts all members defined in config, generating stable UUIDs
  * based on name + first identity for idempotent syncing.
  */
 export function syncMembersFromConfig(
-  registry: HiveMemberRegistry,
+  registry: HearthMemberRegistry,
   groups: Record<
     string,
     {
@@ -285,12 +285,12 @@ export function syncMembersFromConfig(
     for (const memberCfg of groupConfig.members) {
       // Derive a deterministic id from the first identity so config reloads are idempotent
       const primaryIdentity = memberCfg.identities[0];
-      const stableKey = primaryIdentity
+      const _stableKey = primaryIdentity
         ? `${primaryIdentity.channel}:${primaryIdentity.id}`
         : memberCfg.name;
 
       // Check if member already exists by primary identity
-      let existing: HiveMember | undefined;
+      let existing: HearthMember | undefined;
       if (primaryIdentity) {
         existing = registry.resolveByChannelIdentity(primaryIdentity.channel, primaryIdentity.id);
       }

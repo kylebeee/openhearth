@@ -1,17 +1,17 @@
 import type { MsgContext } from "../../auto-reply/templating.js";
-import type { HiveConfig } from "../../config/types.hive.js";
-import type { HiveMemberRegistry } from "./registry.js";
-import type { HiveMember } from "./types.js";
+import type { HearthConfig } from "../../config/types.hearth.js";
+import type { HearthMemberRegistry } from "./registry.js";
+import type { HearthMember } from "./types.js";
 
-export type HiveMemberResolution =
+export type HearthMemberResolution =
   | {
-      member: HiveMember;
+      member: HearthMember;
       groupKey: string;
     }
   | undefined;
 
 /**
- * Resolve the sender of a message to a HiveMember.
+ * Resolve the sender of a message to a HearthMember.
  *
  * Resolution strategy:
  * 1. Try registry lookup by channel + sender id
@@ -21,9 +21,9 @@ export type HiveMemberResolution =
  */
 export function resolveMember(params: {
   ctx: MsgContext;
-  registry: HiveMemberRegistry;
-  hiveConfig: HiveConfig;
-}): HiveMemberResolution {
+  registry: HearthMemberRegistry;
+  hiveConfig: HearthConfig;
+}): HearthMemberResolution {
   const { ctx, registry, hiveConfig } = params;
   const channel = (ctx.Provider ?? ctx.OriginatingChannel ?? "").toString().toLowerCase();
   if (!channel) {
@@ -68,7 +68,7 @@ export function resolveMember(params: {
   return resolveFromConfig(ctx, hiveConfig, channel);
 }
 
-function findGroupKeyForMember(hiveConfig: HiveConfig, member: HiveMember): string | undefined {
+function findGroupKeyForMember(hiveConfig: HearthConfig, member: HearthMember): string | undefined {
   if (!hiveConfig.groups) {
     return undefined;
   }
@@ -95,9 +95,9 @@ function findGroupKeyForMember(hiveConfig: HiveConfig, member: HiveMember): stri
 
 function resolveFromConfig(
   ctx: MsgContext,
-  hiveConfig: HiveConfig,
+  hiveConfig: HearthConfig,
   channel: string,
-): HiveMemberResolution {
+): HearthMemberResolution {
   if (!hiveConfig.groups) {
     return undefined;
   }

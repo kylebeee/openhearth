@@ -1,15 +1,17 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import type { AnyAgentTool } from "../../agents/tools/common.js";
-import type { HiveMemberRegistry } from "../members/registry.js";
+import type { HearthMemberRegistry } from "../members/registry.js";
 import { jsonResult, readStringParam } from "../../agents/tools/common.js";
 
-export function createHiveMemberListTool(params: { registry: HiveMemberRegistry }): AnyAgentTool {
+export function createHearthMemberListTool(params: {
+  registry: HearthMemberRegistry;
+}): AnyAgentTool {
   return {
-    label: "Hive Members",
-    name: "hive_members",
+    label: "Hearth Members",
+    name: "hearth_members",
     description:
-      "List all members in the Hive group. Returns names, roles, timezones, and preferred channels.",
+      "List all members in the Hearth group. Returns names, roles, timezones, and preferred channels.",
     parameters: Type.Object({}),
     async execute(_toolCallId, _input): Promise<AgentToolResult<unknown>> {
       const members = params.registry.getAllMembers();
@@ -29,12 +31,14 @@ export function createHiveMemberListTool(params: { registry: HiveMemberRegistry 
   };
 }
 
-export function createHiveMemberInfoTool(params: { registry: HiveMemberRegistry }): AnyAgentTool {
+export function createHearthMemberInfoTool(params: {
+  registry: HearthMemberRegistry;
+}): AnyAgentTool {
   return {
-    label: "Hive Member Info",
-    name: "hive_member_info",
+    label: "Hearth Member Info",
+    name: "hearth_member_info",
     description:
-      "Get detailed information about a specific Hive member by name or member ID. Includes their identities, timezone, and preferences.",
+      "Get detailed information about a specific Hearth member by name or member ID. Includes their identities, timezone, and preferences.",
     parameters: Type.Object({
       query: Type.String({ description: "Member name or member ID to look up" }),
     }),

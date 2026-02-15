@@ -1,7 +1,7 @@
 ---
-summary: "Full Hive configuration reference with examples"
+summary: "Full Hearth configuration reference with examples"
 read_when:
-  - Setting up Hive for the first time
+  - Setting up Hearth for the first time
   - Looking up a specific config key
   - Changing privacy, autonomy, or member settings
 title: "Configuration"
@@ -9,13 +9,13 @@ title: "Configuration"
 
 # Configuration
 
-Hive is configured under the `hive` key in `openclaw.json`. When `hive.enabled` is `false` or the `hive` key is absent, no Hive features are active and there is zero overhead.
+Hearth is configured under the `hearth` key in `openclaw.json`. When `hearth.enabled` is `false` or the `hearth` key is absent, no Hearth features are active and there is zero overhead.
 
 ## Full schema
 
 ```json5
 {
-  hive: {
+  hearth: {
     // Master switch. Default: false.
     enabled: true,
 
@@ -99,11 +99,11 @@ Hive is configured under the `hive` key in `openclaw.json`. When `hive.enabled` 
 
 ## Minimal config
 
-The smallest useful Hive config:
+The smallest useful Hearth config:
 
 ```json5
 {
-  hive: {
+  hearth: {
     enabled: true,
     groups: {
       "whatsapp:group:123@g.us": {
@@ -126,7 +126,7 @@ You can configure multiple groups. Each group is independent — different membe
 
 ```json5
 {
-  hive: {
+  hearth: {
     enabled: true,
     groups: {
       "whatsapp:group:family@g.us": {
@@ -167,7 +167,7 @@ A member can appear in multiple groups with different roles:
 
 ```json5
 {
-  hive: {
+  hearth: {
     enabled: true,
     groups: {
       "whatsapp:group:family@g.us": {
@@ -227,13 +227,13 @@ The config is validated with Zod schemas on load. Common validation errors:
 
 ## Storage
 
-- Member data syncs from config to SQLite at `~/.openclaw/hive/members.db`
+- Member data syncs from config to SQLite at `~/.openclaw/hearth/members.db`
 - Sync is idempotent — safe to reload config without duplicating members
-- The database is created automatically on first gateway start with Hive enabled
+- The database is created automatically on first gateway start with Hearth enabled
 
 ## Related
 
-- [Members](/hive/members) — member model details
-- [Privacy](/hive/privacy) — privacy system
-- [Autonomy](/hive/autonomy) — autonomy levels
-- [Hive Overview](/hive) — feature overview
+- [Members](/hearth/members) — member model details
+- [Privacy](/hearth/privacy) — privacy system
+- [Autonomy](/hearth/autonomy) — autonomy levels
+- [Hearth Overview](/hearth) — feature overview

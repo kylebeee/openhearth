@@ -1,5 +1,5 @@
 ---
-summary: "Configurable per-domain autonomy levels for Hive groups"
+summary: "Configurable per-domain autonomy levels for Hearth groups"
 read_when:
   - Controlling how autonomous the agent is in different domains
   - Setting up ask-first vs autonomous behavior
@@ -8,7 +8,7 @@ title: "Autonomy"
 
 # Autonomy
 
-Hive lets you control how autonomous the agent is across different domains. The agent might schedule a dinner reservation autonomously but ask before spending money.
+Hearth lets you control how autonomous the agent is across different domains. The agent might schedule a dinner reservation autonomously but ask before spending money.
 
 ## Autonomy levels
 
@@ -44,7 +44,7 @@ These are the recommended defaults for a family/team group:
 Autonomy levels are injected into the system prompt as guidance for the agent. The agent sees instructions like:
 
 ```
-## Hive Autonomy Levels
+## Hearth Autonomy Levels
 Your autonomy varies by domain. Follow these levels:
 - scheduling: autonomous (act autonomously, inform after the fact)
 - spending: ask-first (propose an action and ask before executing)
@@ -76,7 +76,7 @@ Different groups can have different autonomy settings:
 
 ```json5
 {
-  hive: {
+  hearth: {
     groups: {
       "whatsapp:group:family@g.us": {
         name: "Family",
@@ -107,6 +107,6 @@ Autonomy config is accepted in Phase 1 and included in the system prompt. The fu
 
 ## Related
 
-- [Guardrails](/hive/guardrails) — what the agent can say (separate from what it can do)
-- [Privacy](/hive/privacy) — privacy layers
-- [Configuration](/hive/configuration) — full config reference
+- [Guardrails](/hearth/guardrails) — what the agent can say (separate from what it can do)
+- [Privacy](/hearth/privacy) — privacy layers
+- [Configuration](/hearth/configuration) — full config reference

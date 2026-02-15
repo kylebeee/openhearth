@@ -1,7 +1,7 @@
 ---
-summary: "Hive privacy layers: public, subgroup, private, and agent-inferred context scoping"
+summary: "Hearth privacy layers: public, subgroup, private, and agent-inferred context scoping"
 read_when:
-  - Understanding how Hive handles private vs public information
+  - Understanding how Hearth handles private vs public information
   - Configuring domain-specific privacy rules
   - Checking how DM content is protected in group contexts
 title: "Privacy"
@@ -9,7 +9,7 @@ title: "Privacy"
 
 # Privacy
 
-Hive's privacy system controls how context flows between conversations. It ensures DM content stays private while still allowing the agent to make informed group decisions.
+Hearth's privacy system controls how context flows between conversations. It ensures DM content stays private while still allowing the agent to make informed group decisions.
 
 ## Privacy layers
 
@@ -45,7 +45,7 @@ You can configure privacy rules for specific domains (topics). This overrides th
 
 ```json5
 {
-  hive: {
+  hearth: {
     groups: {
       "whatsapp:group:123@g.us": {
         name: "Family",
@@ -77,7 +77,7 @@ Privacy is enforced at four layers (not just the prompt):
 
 ### 1. Prompt layer
 
-Hard-coded communication guardrails are injected into the system prompt. These are never overridable by config or user instructions. See [Guardrails](/hive/guardrails).
+Hard-coded communication guardrails are injected into the system prompt. These are never overridable by config or user instructions. See [Guardrails](/hearth/guardrails).
 
 ### 2. Context bridge layer (Phase 2)
 
@@ -85,7 +85,7 @@ When the cross-session context bridge is active, private context is filtered bef
 
 ### 3. Tool layer (Phase 3+)
 
-Privacy checks run before any message relay tool executes. The `hive_context_check` tool lets the agent verify privacy boundaries before sharing information.
+Privacy checks run before any message relay tool executes. The `hearth_context_check` tool lets the agent verify privacy boundaries before sharing information.
 
 ### 4. Post-processing layer
 
@@ -101,7 +101,7 @@ If a violation is detected, the message is flagged for review.
 
 Two tools help the agent work with privacy:
 
-### `hive_context_check`
+### `hearth_context_check`
 
 Check the privacy boundary for information before sharing:
 
@@ -110,7 +110,7 @@ Input:  { content: "dinner allergies", domain: "health", chatType: "group" }
 Output: { privacyLayer: "private", canShareInGroup: false, guidance: "..." }
 ```
 
-### `hive_context_note`
+### `hearth_context_note`
 
 Store a scoped context note with privacy tagging:
 
@@ -119,7 +119,7 @@ Input:  { content: "Allergic to shellfish", memberId: "...", privacyLayer: "priv
 Output: { stored: true, privacyLayer: "private" }
 ```
 
-See [Tools](/hive/tools) for full tool documentation.
+See [Tools](/hearth/tools) for full tool documentation.
 
 ## Config reference
 
@@ -141,6 +141,6 @@ See [Tools](/hive/tools) for full tool documentation.
 
 ## Related
 
-- [Guardrails](/hive/guardrails) — communication principles enforcement
-- [Tools](/hive/tools) — privacy tools (`hive_context_check`, `hive_context_note`)
-- [Members](/hive/members) — member model and resolution
+- [Guardrails](/hearth/guardrails) — communication principles enforcement
+- [Tools](/hearth/tools) — privacy tools (`hearth_context_check`, `hearth_context_note`)
+- [Members](/hearth/members) — member model and resolution

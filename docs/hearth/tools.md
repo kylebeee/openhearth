@@ -1,18 +1,18 @@
 ---
-summary: "Hive agent tools: member lookup, privacy checks, and context notes"
+summary: "Hearth agent tools: member lookup, privacy checks, and context notes"
 read_when:
-  - Understanding what tools are available to the agent in Hive mode
+  - Understanding what tools are available to the agent in Hearth mode
   - Checking how to query member info or privacy boundaries
 title: "Tools"
 ---
 
-# Hive Tools
+# Hearth Tools
 
-When Hive is enabled, the agent gains access to specialized tools for member awareness and privacy management.
+When Hearth is enabled, the agent gains access to specialized tools for member awareness and privacy management.
 
-## `hive_members`
+## `hearth_members`
 
-List all members in the Hive group.
+List all members in the Hearth group.
 
 **Parameters:** None
 
@@ -45,9 +45,9 @@ List all members in the Hive group.
 Notes:
 
 - Returns a summary (no full identity details) to avoid leaking channel-specific IDs in the conversation.
-- Use `hive_member_info` for detailed information about a specific member.
+- Use `hearth_member_info` for detailed information about a specific member.
 
-## `hive_member_info`
+## `hearth_member_info`
 
 Get detailed information about a specific member.
 
@@ -79,7 +79,7 @@ Notes:
 - Matches by exact member ID first, then by name (case-insensitive, partial match).
 - Returns full identity details including channel-specific IDs.
 
-## `hive_context_check`
+## `hearth_context_check`
 
 Check the privacy boundary for a piece of information before sharing.
 
@@ -109,7 +109,7 @@ Notes:
 - Domain rules from group config are applied when a `domain` tag is provided.
 - Guidance text is actionable — the agent can follow it directly.
 
-## `hive_context_note`
+## `hearth_context_note`
 
 Store a scoped context note about a member with privacy tagging.
 
@@ -142,15 +142,15 @@ Notes:
 
 ## Tool availability
 
-Hive tools are injected when:
+Hearth tools are injected when:
 
-1. `hive.enabled` is `true` in config
-2. The current session matches a configured Hive group
+1. `hearth.enabled` is `true` in config
+2. The current session matches a configured Hearth group
 
 The tools appear in the system prompt's tool listing and follow standard tool policy rules (allow/deny lists, per-sender policies).
 
 ## Related
 
-- [Members](/hive/members) — member model and resolution
-- [Privacy](/hive/privacy) — privacy layers and domain rules
-- [Configuration](/hive/configuration) — full config reference
+- [Members](/hearth/members) — member model and resolution
+- [Privacy](/hearth/privacy) — privacy layers and domain rules
+- [Configuration](/hearth/configuration) — full config reference

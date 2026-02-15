@@ -1,5 +1,5 @@
-import type { HiveGroupConfig } from "../../config/types.hive.js";
-import type { HiveMember } from "../members/types.js";
+import type { HearthGroupConfig } from "../../config/types.hearth.js";
+import type { HearthMember } from "../members/types.js";
 import type { PrivacyLayer, PrivacyPolicy, ScopedContext } from "./types.js";
 
 /**
@@ -7,7 +7,7 @@ import type { PrivacyLayer, PrivacyPolicy, ScopedContext } from "./types.js";
  */
 export function classifyPrivacyLayer(params: {
   chatType?: string;
-  groupConfig?: HiveGroupConfig;
+  groupConfig?: HearthGroupConfig;
   domain?: string;
 }): PrivacyLayer {
   const { chatType, groupConfig, domain } = params;
@@ -39,7 +39,7 @@ export function classifyPrivacyLayer(params: {
 /**
  * Build a PrivacyPolicy from group config.
  */
-export function buildPrivacyPolicy(groupConfig?: HiveGroupConfig): PrivacyPolicy {
+export function buildPrivacyPolicy(groupConfig?: HearthGroupConfig): PrivacyPolicy {
   return {
     defaultLayer: groupConfig?.privacy?.defaultLayer ?? "public",
     domainRules: groupConfig?.privacy?.domainRules ?? [],
@@ -114,7 +114,7 @@ export function canRelayToMember(params: {
 export function scanForPrivacyViolations(params: {
   text: string;
   privateContexts: ScopedContext[];
-  members: HiveMember[];
+  members: HearthMember[];
 }): string[] {
   const { text, privateContexts, members } = params;
   const violations: string[] = [];

@@ -958,19 +958,24 @@
             ]
           },
           {
-            "tab": "Hive",
+            "tab": "Hearth",
             "groups": [
               {
                 "group": "Overview",
-                "pages": ["hive/index"]
+                "pages": ["hearth/index"]
               },
               {
                 "group": "Core concepts",
-                "pages": ["hive/members", "hive/privacy", "hive/guardrails", "hive/autonomy"]
+                "pages": [
+                  "hearth/members",
+                  "hearth/privacy",
+                  "hearth/guardrails",
+                  "hearth/autonomy"
+                ]
               },
               {
                 "group": "Reference",
-                "pages": ["hive/configuration", "hive/tools", "hive/architecture"]
+                "pages": ["hearth/configuration", "hearth/tools", "hearth/architecture"]
               }
             ]
           },

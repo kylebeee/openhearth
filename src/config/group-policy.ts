@@ -1,6 +1,6 @@
 import type { ChannelId } from "../channels/plugins/types.js";
-import type { HiveMemberRegistry } from "../hive/members/registry.js";
-import type { HiveMember } from "../hive/members/types.js";
+import type { HearthMemberRegistry } from "../hearth/members/registry.js";
+import type { HearthMember } from "../hearth/members/types.js";
 import type { OpenClawConfig } from "./config.js";
 import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
 import { normalizeAccountId } from "../routing/session-key.js";
@@ -240,26 +240,26 @@ export function resolveChannelGroupToolsPolicy(
 }
 
 /**
- * Resolve a Hive member from group policy sender information.
- * Attempts to match the sender to a HiveMember via the registry,
- * falling back to the existing GroupToolPolicySender for non-Hive contexts.
+ * Resolve a Hearth member from group policy sender information.
+ * Attempts to match the sender to a HearthMember via the registry,
+ * falling back to the existing GroupToolPolicySender for non-Hearth contexts.
  */
-export function resolveHiveMemberPolicy(params: {
+export function resolveHearthMemberPolicy(params: {
   cfg: OpenClawConfig;
   channel: GroupPolicyChannel;
-  registry?: HiveMemberRegistry;
+  registry?: HearthMemberRegistry;
   senderId?: string | null;
   senderName?: string | null;
   senderUsername?: string | null;
   senderE164?: string | null;
 }): {
-  member?: HiveMember;
+  member?: HearthMember;
   toolPolicy?: GroupToolPolicyConfig;
 } {
   const { cfg, channel, registry, senderId, senderName, senderUsername, senderE164 } = params;
 
-  // If Hive is not enabled or no registry, fall back to standard policy
-  if (!cfg.hive?.enabled || !registry) {
+  // If Hearth is not enabled or no registry, fall back to standard policy
+  if (!cfg.hearth?.enabled || !registry) {
     const toolPolicy = resolveChannelGroupToolsPolicy({
       cfg,
       channel,
@@ -273,7 +273,7 @@ export function resolveHiveMemberPolicy(params: {
 
   // Try to resolve member via registry
   const channelStr = channel.toString().toLowerCase();
-  let member: HiveMember | undefined;
+  let member: HearthMember | undefined;
 
   if (senderId) {
     member = registry.resolveByChannelIdentity(channelStr, senderId);

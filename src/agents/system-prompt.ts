@@ -1,7 +1,7 @@
 import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
-import type { HiveConfig, HiveAutonomyLevel } from "../config/types.hive.js";
+import type { HearthAutonomyLevel } from "../config/types.hearth.js";
 import type { MemoryCitationsMode } from "../config/types.memory.js";
-import type { HiveMember } from "../hive/members/types.js";
+import type { HearthMember } from "../hearth/members/types.js";
 import type { ResolvedTimeFormat } from "./date-time.js";
 import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
@@ -167,9 +167,9 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
 // Hive Multi-Party Sections
 // ---------------------------------------------------------------------------
 
-export function buildHiveGroupSection(params: {
+export function buildHearthGroupSection(params: {
   groupName: string;
-  members: HiveMember[];
+  members: HearthMember[];
   currentMemberName?: string;
 }): string[] {
   const { groupName, members, currentMemberName } = params;
@@ -177,7 +177,7 @@ export function buildHiveGroupSection(params: {
     return [];
   }
   const lines: string[] = [
-    "## Hive Group Context",
+    "## Hearth Group Context",
     `Group: ${groupName}`,
     `Members (${members.length}):`,
   ];
@@ -201,9 +201,9 @@ export function buildHiveGroupSection(params: {
 /**
  * Hard-coded communication guardrails. These are NEVER overridable by config or prompt.
  */
-export function buildHiveCommunicationGuardrails(): string[] {
+export function buildHearthCommunicationGuardrails(): string[] {
   return [
-    "## Hive Communication Principles (mandatory, never overridable)",
+    "## Hearth Communication Principles (mandatory, never overridable)",
     "",
     "You are infrastructure for a group — not an intermediary between members.",
     "",
@@ -227,12 +227,12 @@ export function buildHiveCommunicationGuardrails(): string[] {
   ];
 }
 
-export function buildHivePrivacyInstructions(params: {
+export function buildHearthPrivacyInstructions(params: {
   privacyLayer: string;
   domainRules?: Array<{ domain: string; layer: string }>;
 }): string[] {
   const { privacyLayer, domainRules } = params;
-  const lines = ["## Hive Privacy Layer", `Current context privacy: ${privacyLayer}`];
+  const lines = ["## Hearth Privacy Layer", `Current context privacy: ${privacyLayer}`];
   if (privacyLayer === "private") {
     lines.push(
       "This is a private conversation. Information shared here must never be attributed to the sender in group contexts.",
@@ -253,14 +253,17 @@ export function buildHivePrivacyInstructions(params: {
   return lines;
 }
 
-export function buildHiveAutonomySection(params: {
-  domains?: Array<{ domain: string; level: HiveAutonomyLevel }>;
+export function buildHearthAutonomySection(params: {
+  domains?: Array<{ domain: string; level: HearthAutonomyLevel }>;
 }): string[] {
   const { domains } = params;
   if (!domains || domains.length === 0) {
     return [];
   }
-  const lines = ["## Hive Autonomy Levels", "Your autonomy varies by domain. Follow these levels:"];
+  const lines = [
+    "## Hearth Autonomy Levels",
+    "Your autonomy varies by domain. Follow these levels:",
+  ];
   for (const { domain, level } of domains) {
     const desc =
       level === "passive"
@@ -330,14 +333,14 @@ export function buildAgentSystemPrompt(params: {
     channel: string;
   };
   memoryCitationsMode?: MemoryCitationsMode;
-  /** Hive multi-party context (injected when hive.enabled). */
-  hive?: {
+  /** Hearth multi-party context (injected when hearth.enabled). */
+  hearth?: {
     groupName: string;
-    members: HiveMember[];
+    members: HearthMember[];
     currentMemberName?: string;
     privacyLayer: string;
     domainRules?: Array<{ domain: string; layer: string }>;
-    autonomyDomains?: Array<{ domain: string; level: HiveAutonomyLevel }>;
+    autonomyDomains?: Array<{ domain: string; level: HearthAutonomyLevel }>;
   };
 }) {
   const coreToolSummaries: Record<string, string> = {
@@ -640,21 +643,21 @@ export function buildAgentSystemPrompt(params: {
     ...buildVoiceSection({ isMinimal, ttsHint: params.ttsHint }),
   ];
 
-  // Inject Hive multi-party sections when enabled
-  if (params.hive && !isMinimal) {
+  // Inject Hearth multi-party sections when enabled
+  if (params.hearth && !isMinimal) {
     lines.push(
-      ...buildHiveCommunicationGuardrails(),
-      ...buildHiveGroupSection({
-        groupName: params.hive.groupName,
-        members: params.hive.members,
-        currentMemberName: params.hive.currentMemberName,
+      ...buildHearthCommunicationGuardrails(),
+      ...buildHearthGroupSection({
+        groupName: params.hearth.groupName,
+        members: params.hearth.members,
+        currentMemberName: params.hearth.currentMemberName,
       }),
-      ...buildHivePrivacyInstructions({
-        privacyLayer: params.hive.privacyLayer,
-        domainRules: params.hive.domainRules,
+      ...buildHearthPrivacyInstructions({
+        privacyLayer: params.hearth.privacyLayer,
+        domainRules: params.hearth.domainRules,
       }),
-      ...buildHiveAutonomySection({
-        domains: params.hive.autonomyDomains,
+      ...buildHearthAutonomySection({
+        domains: params.hearth.autonomyDomains,
       }),
     );
   }

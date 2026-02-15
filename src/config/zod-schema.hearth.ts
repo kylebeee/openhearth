@@ -23,7 +23,7 @@ const MemberChannelIdentitySchema = z
   })
   .strict();
 
-const HiveMemberSchema = z
+const HearthMemberSchema = z
   .object({
     name: z.string(),
     role: MemberRoleSchema.optional(),
@@ -48,7 +48,7 @@ const HivePrivacySchema = z
   })
   .strict();
 
-const HiveAutonomyLevelSchema = z.union([
+const HearthAutonomyLevelSchema = z.union([
   z.literal("passive"),
   z.literal("suggest"),
   z.literal("ask-first"),
@@ -58,7 +58,7 @@ const HiveAutonomyLevelSchema = z.union([
 const HiveAutonomyDomainSchema = z
   .object({
     domain: z.string(),
-    level: HiveAutonomyLevelSchema,
+    level: HearthAutonomyLevelSchema,
   })
   .strict();
 
@@ -68,19 +68,19 @@ const HiveAutonomySchema = z
   })
   .strict();
 
-const HiveGroupSchema = z
+const HearthGroupSchema = z
   .object({
     name: z.string(),
-    members: z.array(HiveMemberSchema).optional(),
+    members: z.array(HearthMemberSchema).optional(),
     privacy: HivePrivacySchema.optional(),
     autonomy: HiveAutonomySchema.optional(),
   })
   .strict();
 
-export const HiveSchema = z
+export const HearthSchema = z
   .object({
     enabled: z.boolean().optional(),
-    groups: z.record(z.string(), HiveGroupSchema).optional(),
+    groups: z.record(z.string(), HearthGroupSchema).optional(),
   })
   .strict()
   .optional();

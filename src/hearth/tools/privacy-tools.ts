@@ -1,14 +1,14 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import type { AnyAgentTool } from "../../agents/tools/common.js";
-import type { HiveConfig } from "../../config/types.hive.js";
+import type { HearthConfig } from "../../config/types.hearth.js";
 import { jsonResult, readStringParam } from "../../agents/tools/common.js";
 import { classifyPrivacyLayer } from "../privacy/engine.js";
 
-export function createHiveContextCheckTool(params: { hiveConfig: HiveConfig }): AnyAgentTool {
+export function createHearthContextCheckTool(params: { hiveConfig: HearthConfig }): AnyAgentTool {
   return {
-    label: "Hive Context Check",
-    name: "hive_context_check",
+    label: "Hearth Context Check",
+    name: "hearth_context_check",
     description:
       "Check the privacy boundary for a piece of information before sharing it. " +
       "Returns whether the information can be shared in the current context and any restrictions.",
@@ -61,10 +61,10 @@ export function createHiveContextCheckTool(params: { hiveConfig: HiveConfig }): 
   };
 }
 
-export function createHiveContextNoteTool(): AnyAgentTool {
+export function createHearthContextNoteTool(): AnyAgentTool {
   return {
-    label: "Hive Context Note",
-    name: "hive_context_note",
+    label: "Hearth Context Note",
+    name: "hearth_context_note",
     description:
       "Store a scoped context note about a member. " +
       "Notes are privacy-tagged and can only be surfaced according to their privacy layer. " +

@@ -11,14 +11,14 @@ export type MemberChannelIdentity = {
   displayName?: string;
 };
 
-export type HiveMemberPreferences = {
+export type HearthMemberPreferences = {
   /** Preferred language for messages. */
   language?: string;
   /** Custom preferences (free-form). */
   [key: string]: unknown;
 };
 
-export type HiveMember = {
+export type HearthMember = {
   /** Stable unique member id (UUID). */
   memberId: string;
   /** Display name. */
@@ -32,10 +32,10 @@ export type HiveMember = {
   /** Cross-channel identities for this member. */
   identities: MemberChannelIdentity[];
   /** Member-level preferences. */
-  preferences?: HiveMemberPreferences;
+  preferences?: HearthMemberPreferences;
 };
 
-export type HiveSubgroup = {
+export type HearthSubgroup = {
   /** Stable unique subgroup id (UUID). */
   subgroupId: string;
   /** Human-readable subgroup name. */
@@ -46,13 +46,13 @@ export type HiveSubgroup = {
   createdAt: number;
 };
 
-export type HiveGroup = {
+export type HearthGroup = {
   /** Group key from config (e.g. "whatsapp:group:123456@g.us"). */
   groupKey: string;
   /** Human-readable group name. */
   name: string;
   /** Group members. */
-  members: HiveMember[];
+  members: HearthMember[];
   /** Dynamic subgroups. */
-  subgroups: HiveSubgroup[];
+  subgroups: HearthSubgroup[];
 };

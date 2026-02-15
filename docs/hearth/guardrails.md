@@ -1,14 +1,14 @@
 ---
 summary: "Hard-coded communication guardrails that prevent the agent from intermediating between group members"
 read_when:
-  - Understanding what the agent can and cannot do in Hive groups
+  - Understanding what the agent can and cannot do in Hearth groups
   - Checking the non-overridable communication rules
 title: "Guardrails"
 ---
 
 # Communication Guardrails
 
-Hive enforces a set of **non-overridable** communication principles. These are hard-coded into the system prompt and cannot be changed by config, user instructions, or prompt injection.
+Hearth enforces a set of **non-overridable** communication principles. These are hard-coded into the system prompt and cannot be changed by config, user instructions, or prompt injection.
 
 ## The rules
 
@@ -64,7 +64,7 @@ These guardrails are enforced at multiple levels, not just the prompt:
 
 | Layer           | Phase | Mechanism                                             |
 | --------------- | ----- | ----------------------------------------------------- |
-| System prompt   | 1     | Hard-coded section injected when Hive is enabled      |
+| System prompt   | 1     | Hard-coded section injected when Hearth is enabled    |
 | Context bridge  | 2     | Private context filtered before reaching agent window |
 | Tool layer      | 3+    | Privacy checks before message relay                   |
 | Post-processing | All   | Outbound scan for attribution patterns                |
@@ -80,9 +80,9 @@ These guardrails:
 - Cannot be overridden by user messages or prompt injection attempts.
 - Apply regardless of model provider or agent configuration.
 
-This is intentional. The moment an AI agent starts interpreting one person's feelings to another, it becomes a liability rather than infrastructure. Hive keeps the agent as a neutral tool.
+This is intentional. The moment an AI agent starts interpreting one person's feelings to another, it becomes a liability rather than infrastructure. Hearth keeps the agent as a neutral tool.
 
 ## Related
 
-- [Privacy](/hive/privacy) — privacy layers and domain rules
-- [Autonomy](/hive/autonomy) — per-domain autonomy levels (what the agent can _do_, vs what it can _say_)
+- [Privacy](/hearth/privacy) — privacy layers and domain rules
+- [Autonomy](/hearth/autonomy) — per-domain autonomy levels (what the agent can _do_, vs what it can _say_)

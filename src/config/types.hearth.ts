@@ -1,11 +1,11 @@
 import type {
   MemberRole,
   MemberChannelIdentity,
-  HiveMemberPreferences,
-} from "../hive/members/types.js";
-import type { PrivacyLayer } from "../hive/privacy/types.js";
+  HearthMemberPreferences,
+} from "../hearth/members/types.js";
+import type { PrivacyLayer } from "../hearth/privacy/types.js";
 
-export type HiveMemberConfig = {
+export type HearthMemberConfig = {
   /** Display name. */
   name: string;
   /** Role within the group. */
@@ -17,7 +17,7 @@ export type HiveMemberConfig = {
   /** Cross-channel identities for this member. */
   identities: MemberChannelIdentity[];
   /** Member-level preferences. */
-  preferences?: HiveMemberPreferences;
+  preferences?: HearthMemberPreferences;
 };
 
 export type HivePrivacyDomainRuleConfig = {
@@ -27,41 +27,41 @@ export type HivePrivacyDomainRuleConfig = {
   layer: PrivacyLayer;
 };
 
-export type HivePrivacyConfig = {
+export type HearthPrivacyConfig = {
   /** Default privacy layer for group context. */
   defaultLayer?: PrivacyLayer;
   /** Domain-specific privacy overrides. */
   domainRules?: HivePrivacyDomainRuleConfig[];
 };
 
-export type HiveAutonomyLevel = "passive" | "suggest" | "ask-first" | "autonomous";
+export type HearthAutonomyLevel = "passive" | "suggest" | "ask-first" | "autonomous";
 
 export type HiveAutonomyDomainConfig = {
   /** Domain label (e.g. "scheduling", "spending"). */
   domain: string;
   /** Autonomy level for this domain. */
-  level: HiveAutonomyLevel;
+  level: HearthAutonomyLevel;
 };
 
-export type HiveAutonomyConfig = {
+export type HearthAutonomyConfig = {
   /** Per-domain autonomy settings. */
   domains?: HiveAutonomyDomainConfig[];
 };
 
-export type HiveGroupConfig = {
+export type HearthGroupConfig = {
   /** Human-readable group name. */
   name: string;
   /** Group members. */
-  members?: HiveMemberConfig[];
+  members?: HearthMemberConfig[];
   /** Privacy settings. */
-  privacy?: HivePrivacyConfig;
+  privacy?: HearthPrivacyConfig;
   /** Autonomy settings. */
-  autonomy?: HiveAutonomyConfig;
+  autonomy?: HearthAutonomyConfig;
 };
 
-export type HiveConfig = {
+export type HearthConfig = {
   /** Enable Hive multi-party features. When false/absent, system behaves like stock OpenClaw. */
   enabled?: boolean;
   /** Group configurations keyed by group identifier (e.g. "whatsapp:group:123456@g.us"). */
-  groups?: Record<string, HiveGroupConfig>;
+  groups?: Record<string, HearthGroupConfig>;
 };
